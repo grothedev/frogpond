@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Post;
+use App\Croak;
 use Illuminate\Http\Request;
 
-class PostController extends Controller
+class CroakController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,7 +14,8 @@ class PostController extends Controller
      */
     public function index()
     {
-        //
+        $c = Croak::all()->toArray();
+        return $c;
     }
 
     /**
@@ -35,7 +36,19 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $c = new Croak();
+        $c->type = $request->type;
+        $c->x = $request->x;
+        $c->y = $request->y;
+        $c->ip = \Request::getClientIp(true);
+        $c->content = $request->content;
+        $c->fade_rate = .6;
+
+        if ($saved = $c->save()){
+          return 0;
+        } else {
+          return $saved;
+        }
     }
 
     /**

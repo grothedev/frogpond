@@ -16,4 +16,4 @@ Route::get('/', function () {
 });
 
 
-Route::Resource('posts', 'PostController');
+Route::Resource('croaks', 'CroakController');

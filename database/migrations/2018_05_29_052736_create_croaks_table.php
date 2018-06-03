@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreatePostsTable extends Migration
+class CreateCroaksTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,15 @@ class CreatePostsTable extends Migration
      */
     public function up()
     {
-        Schema::create('posts', function (Blueprint $table) {
+        Schema::create('croaks', function (Blueprint $table) {
             $table->increments('id');
             $table->timestamps();
             $table->integer('x');
             $table->integer('y');
             $table->ipAddress('ip');
-            $table->enum('type', ['txt', 'aud', 'vid', 'img']);
-            $table->integer('alpha-rate');
+            $table->integer('type'); // txt img aud vid
+            $table->string('content');
+            $table->float('fade_rate', 3, 2);
         });
     }
 
@@ -31,6 +32,6 @@ class CreatePostsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('posts');
+        Schema::dropIfExists('croaks');
     }
 }

@@ -4,9 +4,9 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Post extends Model
+class Croak extends Model
 {
     protected $fillable = [
-      'x', 'y', 'type', 'ip', 'alpha_rate'
-    ]
+      'x', 'y', 'ip', 'type', 'content', 'fade_rate'
+    ];
 }
