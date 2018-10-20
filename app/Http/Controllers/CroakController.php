@@ -15,8 +15,20 @@ class CroakController extends Controller
      */
     public function index()
     {
-        $c = Croak::all()->toArray();
-        return $c;
+        $croaks = Croak::all();
+        $tags = Tag::all();
+        $result = $croaks->toArray();
+
+        $i = 0;
+        foreach($croaks as $c){
+          $result[$i]['tags'] = $c->tags()->get();
+          var_dump($c->files()->get());
+          if ($c->files()) $result[$i]['files'] = $c->files()->get();
+          echo('<br>');
+          $i++;
+        }
+
+        return $result;
     }
 
     /**
@@ -51,23 +63,30 @@ class CroakController extends Controller
       $c->content = $request->content;
       $c->fade_rate = .6;
 
+      /*
       if (Auth::guest()){
         //post anonymously
       } else {
 
       }
+      */
 
       $saved = null;
       if ($saved = $c->save()){
-        $tags = $request->tags;
+        $tags = explode(' ', $request->tags);
         foreach( $tags as $tag){
-          $t = Tag::firstOrCreate(['tag' => $tag]);
+          $t = Tag::firstOrCreate(['label' => $tag]);
           $c->tags()->attach($t['id']);
         }
+
+        
+
         return 0;
       } else {
         return $saved;
       }
+
+
 
     }
 

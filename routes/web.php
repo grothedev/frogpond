@@ -17,6 +17,9 @@ Route::get('/', function () {
     return view('layouts.app');
 });
 
+Route::get('apitest', function(){
+  return view('apitest');
+});
 
 
 //Route::get('/', 'HomeController@index');

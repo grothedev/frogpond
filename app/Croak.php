@@ -18,6 +18,10 @@ class Croak extends Model
       return $this->belongsToMany('App\Tag');
     }
 
+    public function files(){
+      return $this->belongsToMany('App\File');
+    }
+
     //comments
 
     //votes

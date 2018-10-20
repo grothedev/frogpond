@@ -14,7 +14,8 @@ class FileController extends Controller
      */
     public function index()
     {
-        //
+        $files = File::all();
+        return $files;
     }
 
     /**
@@ -35,7 +36,23 @@ class FileController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $files = $request->file('f');
+        var_dump($files);
+
+        return 'ffff';
+
+        $dst = 'uploaded_files';
+
+        $fObj = new File();
+        $fObj->filename = $file->getClientOriginalName();
+        $fObj->path = $dst . '/' . $file->getClientOriginalName();
+        $fObj->filesize = $file->getSize();
+
+        $s = $fObj->save();
+
+        $m = $file->move($dst,$file->getClientOriginalName());
+
+        return $s . ' ' . $m;
     }
 
     /**
@@ -44,9 +61,9 @@ class FileController extends Controller
      * @param  \App\File  $file
      * @return \Illuminate\Http\Response
      */
-    public function show(File $file)
+    public function show($id)
     {
-        //
+      return File::findOrFail($id);
     }
 
     /**
