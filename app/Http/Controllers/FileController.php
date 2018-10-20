@@ -37,22 +37,35 @@ class FileController extends Controller
     public function store(Request $request)
     {
         $files = $request->file('f');
-        var_dump($files);
+        $success = array(); //each file success
 
-        return 'ffff';
 
         $dst = 'uploaded_files';
 
-        $fObj = new File();
-        $fObj->filename = $file->getClientOriginalName();
-        $fObj->path = $dst . '/' . $file->getClientOriginalName();
-        $fObj->filesize = $file->getSize();
 
-        $s = $fObj->save();
+        if (!is_array($files)) { //make it into a 1 elem array
+          $tmp = array();
+          array_push($tmp, $files);
+          $files = $tmp;
+        }
 
-        $m = $file->move($dst,$file->getClientOriginalName());
+        foreach ($files as $f){
+          $fObj = new File();
+          $fObj->filename = $f->getClientOriginalName();
+          $fObj->path = $dst . '/' . $f->getClientOriginalName();
+          $fObj->filesize = $f->getSize();
 
-        return $s . ' ' . $m;
+          $s = $fObj->save();
+
+          $m = $f->move($dst,$f->getClientOriginalName());
+
+          if ($s && !is_null($m)) array_push($success, 1);
+          else array_push($success, 0);
+
+        }
+
+
+        return $success;
     }
 
     /**

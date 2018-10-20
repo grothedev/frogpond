@@ -26,8 +26,6 @@ class CreateCroaksTable extends Migration
             $table->integer('user_id')->unsigned()->nullable();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
 
-            $table->integer('file_id')->unsigned()->nullable();
-            $table->foreign('file_id')->references('id')->on('file')->onDelete('cascade');
         });
     }
 

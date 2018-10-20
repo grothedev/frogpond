@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Croak;
 use App\Tag;
+use App\File;
 use Illuminate\Http\Request;
 
 class CroakController extends Controller
@@ -16,19 +17,28 @@ class CroakController extends Controller
     public function index()
     {
         $croaks = Croak::all();
-        $tags = Tag::all();
-        $result = $croaks->toArray();
+        //$tags = Tag::all();
+        //$result = $croaks->toArray();
+        $result = array();
 
         $i = 0;
         foreach($croaks as $c){
-          $result[$i]['tags'] = $c->tags()->get();
-          var_dump($c->files()->get());
-          if ($c->files()) $result[$i]['files'] = $c->files()->get();
-          echo('<br>');
+          $result[$i] = CroakController::attachFilesTags($c);
+          //$result[$i]['tags'] = $c->tags()->get();
+          //if ($c->files()) $result[$i]['files'] = $c->files()->get();
           $i++;
         }
 
         return $result;
+    }
+
+    public function attachFilesTags($croak){
+      $result = null;
+
+      $result['tags'] = $croak->tags()->get();
+      if ($croak->files()) $result['files'] = $croak->files()->get();
+
+      return $result;
     }
 
     /**
@@ -79,7 +89,14 @@ class CroakController extends Controller
           $c->tags()->attach($t['id']);
         }
 
-        
+
+        $files = $request->file('f');
+        $dst = 'uploaded_files';
+        foreach($files as $f){
+          $file = File::firstOrCreate(['filename' => $f->getClientOriginalName(), 'path' => $dst . '/' . $f->getClientOriginalName(), 'filesize' => $f->getSize()]);
+          $c->files()->attach($file['id']);
+        }
+
 
         return 0;
       } else {
@@ -98,7 +115,9 @@ class CroakController extends Controller
      */
     public function show($id)
     {
-        return Croak::findOrFail($id);
+        $croak = Croak::findOrFail($id);
+        return $croak->toArray();
+        return CroakController::attachFilesTags($croak);
     }
 
     /**
