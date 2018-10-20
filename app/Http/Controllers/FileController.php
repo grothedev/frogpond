@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Croak;
+use App\File;
 use Illuminate\Http\Request;
 
-class CroakController extends Controller
+class FileController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,8 +14,7 @@ class CroakController extends Controller
      */
     public function index()
     {
-        $c = Croak::all()->toArray();
-        return $c;
+        //
     }
 
     /**
@@ -36,46 +35,27 @@ class CroakController extends Controller
      */
     public function store(Request $request)
     {
-
-        $c = new Croak();
-        $c->type = $request->type;
-        if (!isset($request->x) || !isset($request->y)){
-          $c->x = $c->y = 0;
-        } else {
-          $c->x = $request->x;
-          $c->y = $request->y;
-        }
-
-        $c->ip = \Request::getClientIp(true);
-        $c->content = $request->content;
-        $c->fade_rate = .6;
-
-        if ($saved = $c->save()){
-          return 0;
-        } else {
-          return $saved;
-        }
-
+        //
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Post  $post
+     * @param  \App\File  $file
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(File $file)
     {
-        return Croak::findOrFail($id);
+        //
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Post  $post
+     * @param  \App\File  $file
      * @return \Illuminate\Http\Response
      */
-    public function edit(Post $post)
+    public function edit(File $file)
     {
         //
     }
@@ -84,10 +64,10 @@ class CroakController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Post  $post
+     * @param  \App\File  $file
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Post $post)
+    public function update(Request $request, File $file)
     {
         //
     }
@@ -95,10 +75,10 @@ class CroakController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Post  $post
+     * @param  \App\File  $file
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Post $post)
+    public function destroy(File $file)
     {
         //
     }

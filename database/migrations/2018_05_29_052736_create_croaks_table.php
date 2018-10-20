@@ -22,6 +22,12 @@ class CreateCroaksTable extends Migration
             $table->integer('type'); // txt img aud vid
             $table->string('content');
             $table->float('fade_rate', 3, 2);
+
+            $table->integer('user_id')->unsigned();
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+
+            $table->integer('file_id')->unsigned();
+            $table->foreign('file_id')->references('id')->on('file')->onDelete('cascade');
         });
     }
 

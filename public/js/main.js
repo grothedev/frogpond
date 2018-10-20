@@ -3,6 +3,7 @@ var inputBox; //html div
 var textIn; //html textarea
 var posted; //bool has the user posted something to the canvas?
 var croakType = 0;
+var croaks;
 
 function init(){
 	canv = document.getElementById("canv");
@@ -12,14 +13,14 @@ function init(){
 	inputZone = document.getElementById("input-zone");
 	textIn = document.getElementById("textIn");
 
+	getCroaks();
 	setInterval(function(){
-		getCroaks()
+		getCroaks();
 	}, 10000);
-
 }
 
 function getCroaks(){
-	axios.get('/croaks')
+	axios.get('api/croaks')
 	.then(function(response){
 		for (var i = 0; i < response.data.length; i++){
 			drawCroak(response.data[i]);
@@ -55,7 +56,7 @@ function croak(t, x, y){
 			break;
 	}
 
-	axios.post('/croaks', req)
+	axios.post('api/croaks', req)
 	.then(function (response) {
     console.log(response);
   })
@@ -65,8 +66,6 @@ function croak(t, x, y){
 }
 
 function updateViewInput( t){
-
-
 	switch (t){
 		case postType.txt:
 			break;
@@ -98,22 +97,23 @@ function clickCanv(e){
 	m = getMousePos(canv, e);
 
 	x.font = "30px Arial";
-	x.fillText(textIn.value, m.x, m.y);
+	//x.fillText(textIn.value, m.x, m.y);
 
 	croak(0, m.x, m.y);
+	getCroaks();
 
-	var a = 1.0;
+	/*var a = 1.0;
 	setInterval(function(){
 		x.clearRect(0, 0, canv.width, canv.height);
-		x.strokeStyle = "rgba(200, 0, 0, " + a + ")";
-		x.strokeText(textIn.value, m.x, m.y);
+		x.fillStyle = "rgba(0, 0, 0, " + a + ")";
+		x.fillText(textIn.value, m.x, m.y);
 		a -= .0005;
 	}, 500);
+*/
 
 
-
-	x.fillStyle = "#000000";
-  x.fillRect (m.x, m.y, 4, 4);
+	//x.fillStyle = "#000000";
+  //x.fillRect (m.x, m.y, 4, 4);
 }
 
 function drawCroak(c){
@@ -121,12 +121,13 @@ function drawCroak(c){
 	console.log(c);
 	switch(Number(c.type)){
 		case 0:
-			x.font = "30px Arial";
-			setInterval(function(){
+		//	x.font = "30px Arial";
+		//	setInterval(function(){
 				//x.clearRect(0, 0, canv.width, canv.height);
-				x.strokeStyle = "rgba(200, 0, 0, 1)";
-				x.strokeText(c.content, Number(c.x), Number(c.y));
-			}, 500);
+				x.fillStyle = "rgba(0, 0, 0, 1)";
+				x.fillText(c.content, Number(c.x), Number(c.y));
+			//}, 8000);
+
 			break;
 		default:
 			break;

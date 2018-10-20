@@ -1,6 +1,7 @@
 <html>
 	<head>
 		<script src = "{{ URL::asset('/js/main.js') }}" type = "text/javascript"></script>
+		<script src = "{{ URL::asset('/js/processing.js') }}" type = "text/javascript"></script>
 		<script src = "https://unpkg.com/axios/dist/axios.min.js"></script>
 		<link href = "{{ URL::asset('/css/style.css') }}" rel = "stylesheet" />
 	</head>

@@ -11,9 +11,16 @@
 |
 */
 
+
 Route::get('/', function () {
-    return view('index');
+    //return view('index');
+    return view('layouts.app');
 });
 
 
-Route::Resource('croaks', 'CroakController');
+
+//Route::get('/', 'HomeController@index');
+
+Auth::routes();
+
+//Route::Resource('croaks', 'CroakController');
