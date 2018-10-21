@@ -19,21 +19,20 @@ class CroakController extends Controller
         $croaks = Croak::all();
         //$tags = Tag::all();
         //$result = $croaks->toArray();
-        $result = array();
+        $result = $croaks->toArray();
 
         $i = 0;
         foreach($croaks as $c){
-          $result[$i] = CroakController::attachFilesTags($c);
-          //$result[$i]['tags'] = $c->tags()->get();
-          //if ($c->files()) $result[$i]['files'] = $c->files()->get();
+          $result[$i]['tags'] = $c->tags()->get();
+          if ($c->files()) $result[$i]['files'] = $c->files()->get();
           $i++;
         }
-
+        //return $croaks;
         return $result;
     }
 
     public function attachFilesTags($croak){
-      $result = null;
+      $result = array();
 
       $result['tags'] = $croak->tags()->get();
       if ($croak->files()) $result['files'] = $croak->files()->get();
@@ -116,8 +115,11 @@ class CroakController extends Controller
     public function show($id)
     {
         $croak = Croak::findOrFail($id);
-        return $croak->toArray();
-        return CroakController::attachFilesTags($croak);
+        $result = $croak->toArray();
+        $result['tags'] = $croak->tags()->get();
+        if ($croak->files()) $result['files'] = $croak->files()->get();
+        return $result;
+        //return CroakController::attachFilesTags($croak);
     }
 
     /**
