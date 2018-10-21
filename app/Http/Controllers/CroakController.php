@@ -91,10 +91,13 @@ class CroakController extends Controller
 
         $files = $request->file('f');
         $dst = 'uploaded_files';
-        foreach($files as $f){
-          $file = File::firstOrCreate(['filename' => $f->getClientOriginalName(), 'path' => $dst . '/' . $f->getClientOriginalName(), 'filesize' => $f->getSize()]);
-          $c->files()->attach($file['id']);
+        if (!is_null($files)){
+          foreach($files as $f){
+            $file = File::firstOrCreate(['filename' => $f->getClientOriginalName(), 'path' => $dst . '/' . $f->getClientOriginalName(), 'filesize' => $f->getSize()]);
+            $c->files()->attach($file['id']);
+          }
         }
+
 
 
         return 0;
