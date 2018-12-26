@@ -18,32 +18,58 @@ class CroakController extends Controller
     {
         $result = array();
         $croaks = Croak::all();
+
+        $i = 0;
+        foreach($croaks as $c){
+          $c['tags'] = $c->tags()->get();
+          if ($c->files()) $c['files'] = $c->files()->get();
+          $i++;
+        }
+
         if ( isset($req->tags) ){
-          echo json_decode($req->tags);
+          //tags query param is a string with each tag label separated by a space
+          $r_tags = explode(',', $req->tags);
+
           $m = 0; //croaks associated with any (0) or all (1) of these tags
           if (isset($req->mode)) $m = $req->mode;
 
           foreach($croaks as $c){
             $c_tags = $c->tags()->get();
-            foreach($c_tags as $t){
-              if (in_array($t->label, $req->tags)){
-                array_push($result, $c);
+            if ($m==0){
+              foreach($c_tags as $t){
+                if (in_array($t->label, $r_tags)){ //if this croak tag matches any request tag
+                  array_push($result, $c);
+                  continue;
+                }
               }
+            } else {
+              $include = true;
+              foreach($r_tags as $rt){
+                for($i = 0; $i < sizeof($c_tags); $i++){
+                  if ($c_tags[$i]->label === $rt) break;
+                  if ($i == sizeof($c_tags)-1){
+                    $include = false; //none of the tags of this croak matched one of the request tags, therefore this croak cannot be included
+                    break 2;
+                  }
+                }
+              }
+              if ($include) array_push($result, $c);
             }
           }
-          array_push($result, 'asdflkn');
         } else {
 
           //$tags = Tag::all();
           //$result = $croaks->toArray();
           $result = $croaks->toArray();
 
+          /*
           $i = 0;
           foreach($croaks as $c){
             $result[$i]['tags'] = $c->tags()->get();
             if ($c->files()) $result[$i]['files'] = $c->files()->get();
             $i++;
           }
+          */
         }
 
         //return $croaks;
@@ -101,7 +127,7 @@ class CroakController extends Controller
 
       $saved = null;
       if ($saved = $c->save()){
-        $tags = explode(' ', $request->tags);
+        $tags = explode(',', $request->tags);
         foreach( $tags as $tag){
           $t = Tag::firstOrCreate(['label' => $tag]);
           $c->tags()->attach($t['id']);
