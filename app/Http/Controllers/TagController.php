@@ -12,9 +12,21 @@ class TagController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+
+      if (!is_null($request['radius'] && !is_null($request['lat']) && !is_null($request['lon']) ){
+        //need to get all croaks that have location such that distance to given latlon is less than given radius
+        //then find the top n most used tags of those posts
+        
+        for ($i = 0; $i < sizeof($tags); $i++){
+
+        }
+      } else {
+        $tags = Tag::all();
+        return $tags;
+      }
+
     }
 
     /**
