@@ -14,19 +14,38 @@ class CroakController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $req)
     {
+        $result = array();
         $croaks = Croak::all();
-        //$tags = Tag::all();
-        //$result = $croaks->toArray();
-        $result = $croaks->toArray();
+        if ( isset($req->tags) ){
+          echo json_decode($req->tags);
+          $m = 0; //croaks associated with any (0) or all (1) of these tags
+          if (isset($req->mode)) $m = $req->mode;
 
-        $i = 0;
-        foreach($croaks as $c){
-          $result[$i]['tags'] = $c->tags()->get();
-          if ($c->files()) $result[$i]['files'] = $c->files()->get();
-          $i++;
+          foreach($croaks as $c){
+            $c_tags = $c->tags()->get();
+            foreach($c_tags as $t){
+              if (in_array($t->label, $req->tags)){
+                array_push($result, $c);
+              }
+            }
+          }
+          array_push($result, 'asdflkn');
+        } else {
+
+          //$tags = Tag::all();
+          //$result = $croaks->toArray();
+          $result = $croaks->toArray();
+
+          $i = 0;
+          foreach($croaks as $c){
+            $result[$i]['tags'] = $c->tags()->get();
+            if ($c->files()) $result[$i]['files'] = $c->files()->get();
+            $i++;
+          }
         }
+
         //return $croaks;
         return $result;
     }
