@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Tag;
+use App\Croak;
+
 use Illuminate\Http\Request;
 
 class TagController extends Controller
@@ -15,13 +17,30 @@ class TagController extends Controller
     public function index(Request $request)
     {
 
-      if (!is_null($request['radius'] && !is_null($request['lat']) && !is_null($request['lon']) ){
-        //need to get all croaks that have location such that distance to given latlon is less than given radius
-        //then find the top n most used tags of those posts
+      if (isset($request->radius) && isset($request->x) && isset($request->y) ){
+        $rx = $request->x; $ry = $request->y;
+        $croaks = Croak::all();
         
-        for ($i = 0; $i < sizeof($tags); $i++){
 
+        for ($i = 0; $i < sizeof($croaks); $i++){
+            $c = $croaks[$i];
+            if (abs($c->x * $c->x + $c->y * $c->y - ($rx*$rx + $ry*$ry)) > $request->radius * $request->radius ){
+                unset($croaks[$i]);
+                echo $c->content;
+            }
         }
+        
+        return $croaks;
+        //then find the top n most used tags of those posts
+        foreach($croaks as $c){
+            $tags = $c->tags();
+            
+        }
+        /*
+        for ($i = 0; $i < sizeof($tags); $i++){
+          
+        }
+        */
       } else {
         $tags = Tag::all();
         return $tags;

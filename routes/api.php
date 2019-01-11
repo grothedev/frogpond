@@ -19,3 +19,4 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::Resource('croaks', 'CroakController');
 Route::Resource('files', 'FileController');
+Route::Resource('tags', 'TagController');

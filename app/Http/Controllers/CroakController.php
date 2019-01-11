@@ -57,19 +57,18 @@ class CroakController extends Controller
             }
           }
         } else {
-
-          //$tags = Tag::all();
-          //$result = $croaks->toArray();
           $result = $croaks->toArray();
+        }
 
-          /*
-          $i = 0;
-          foreach($croaks as $c){
-            $result[$i]['tags'] = $c->tags()->get();
-            if ($c->files()) $result[$i]['files'] = $c->files()->get();
-            $i++;
+        if (isset($req->radius) && isset($req->x) && isset($req->y)){
+          for ($i = 0; $i < sizeof($result); $i++){
+            $c = $result[$i];
+            var_dump($c);
+            if ( abs( (int)$c['x'] * (int)$c['x'] + (int)$c['y'] * (int)$c['y']) > (int)$req->radius * (int)$req->radius ){
+              //print($c['x'] . ' ' . $c['id'] . '\n');
+              unset($result[$i]);
+            }
           }
-          */
         }
 
         //return $croaks;
@@ -116,7 +115,8 @@ class CroakController extends Controller
       $c->ip = \Request::getClientIp(true);
       $c->content = $request->content;
       $c->fade_rate = .6;
-
+      $c->score = 0;
+      
       /*
       if (Auth::guest()){
         //post anonymously

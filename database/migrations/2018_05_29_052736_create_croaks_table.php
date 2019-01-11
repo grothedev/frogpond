@@ -16,12 +16,13 @@ class CreateCroaksTable extends Migration
         Schema::create('croaks', function (Blueprint $table) {
             $table->increments('id');
             $table->timestamps();
-            $table->integer('x');
-            $table->integer('y');
+            $table->float('x');
+            $table->float('y');
             $table->ipAddress('ip');
             $table->integer('type'); // txt img aud vid
             $table->string('content');
             $table->float('fade_rate', 3, 2);
+            $table->integer('score');
 
             $table->integer('user_id')->unsigned()->nullable();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
