@@ -40,7 +40,7 @@ class FileController extends Controller
         $success = array(); //each file success
 
 
-        $dst = 'uploaded_files';
+        $dst = 'f'; //keepin it simple
 
 
         if (!is_array($files)) { //make it into a 1 elem array
