@@ -73,7 +73,7 @@ class FileController extends Controller
           } catch (Exception $e){
             return $e;
           }
-          $m = $f->move($dst,$f->getClientOriginalName());
+          $m = $f->move($dst,$fObj->filename);
           
           if ($s && !is_null($m)) array_push($res, ['filename' => $fObj->filename, 'success' => true] );
           else array_push($res, ['filename' => $fObj->filename, 'success' => false, 'msg' => 'upload failed: php filesystem interaction error'] );
