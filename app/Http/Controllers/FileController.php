@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 
 class FileController extends Controller
 {
+
     /**
      * Display a listing of the resource.
      *
@@ -36,8 +37,9 @@ class FileController extends Controller
      */
     public function store(Request $request)
     {
+        $MAX_FILESIZE = 512000000; //512 MB
         $files = $request->file('f');
-        $res = array(); //[success, filename] response
+        $res = array(); //[success, filename, msg] response for each file
 
 
         $dst = 'f'; //keepin it simple
@@ -52,15 +54,29 @@ class FileController extends Controller
         foreach ($files as $f){
           $fObj = new File();
           $fObj->filename = $f->getClientOriginalName();
-          $fObj->path = $dst . '/' . $f->getClientOriginalName();
+          
+          //checking filesize
           $fObj->filesize = $f->getSize();
+          if ($fObj->filesize > $MAX_FILESIZE){
+            array_push($res, ['filename' => $fObj->filename, 'success' => false, 'msg' => 'file too big (>512MB). contact me for special cases']);
+            continue;
+          }
 
-          $s = $fObj->save();
-			//TODO check for duplicate names and deal with accordingly
+          //checking duplicate filename
+          while (File::where('filename', $fObj->filename)->first() != null){
+            $fObj->filename = rand() . '_' . $f->getClientOriginalName();
+          }
+          $fObj->path = $dst . '/' . $fObj->filename;
+
+          try {
+            $s = $fObj->save();
+          } catch (Exception $e){
+            return $e;
+          }
           $m = $f->move($dst,$f->getClientOriginalName());
-			//TODO return url and maybe other data
-          if ($s && !is_null($m)) array_push($res, [1, $fObj->filename] );
-          else array_push($res, [0, null] );
+          
+          if ($s && !is_null($m)) array_push($res, ['filename' => $fObj->filename, 'success' => true] );
+          else array_push($res, ['filename' => $fObj->filename, 'success' => false, 'msg' => 'upload failed: php filesystem interaction error'] );
 
         }
 
