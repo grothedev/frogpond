@@ -37,7 +37,7 @@ class FileController extends Controller
     public function store(Request $request)
     {
         $files = $request->file('f');
-        $success = array(); //each file success
+        $res = array(); //[success, filename] response
 
 
         $dst = 'f'; //keepin it simple
@@ -56,16 +56,16 @@ class FileController extends Controller
           $fObj->filesize = $f->getSize();
 
           $s = $fObj->save();
-
+			//TODO check for duplicate names and deal with accordingly
           $m = $f->move($dst,$f->getClientOriginalName());
-
-          if ($s && !is_null($m)) array_push($success, 1);
-          else array_push($success, 0);
+			//TODO return url and maybe other data
+          if ($s && !is_null($m)) array_push($res, [1, $fObj->filename] );
+          else array_push($res, [0, null] );
 
         }
 
 
-        return $success;
+        return json_encode($res);
     }
 
     /**
