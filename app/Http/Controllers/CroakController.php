@@ -111,7 +111,9 @@ class CroakController extends Controller
         $c->x = $request->x;
         $c->y = $request->y;
       }
-
+      if (!isset($request->type)){
+        $c->type = 0;
+      }
       $c->ip = \Request::getClientIp(true);
       $c->content = $request->content;
       $c->fade_rate = .6;
