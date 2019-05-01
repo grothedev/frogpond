@@ -21,6 +21,10 @@ Route::get('apitest', function(){
   return view('apitest');
 });
 
+Route::post('pfdb', 'FileController@populateDB');
+Route::get('populatefdb', function(){
+	return view('populate_files');
+});
 
 //Route::get('/', 'HomeController@index');
 

@@ -54,7 +54,7 @@ class FileController extends Controller
         foreach ($files as $f){
           $fObj = new File();
           $fObj->filename = $f->getClientOriginalName();
-          
+
           //checking filesize
           $fObj->filesize = $f->getSize();
           if ($fObj->filesize > $MAX_FILESIZE){
@@ -74,7 +74,7 @@ class FileController extends Controller
             return $e;
           }
           $m = $f->move($dst,$fObj->filename);
-          
+
           if ($s && !is_null($m)) array_push($res, ['filename' => $fObj->filename, 'success' => true] );
           else array_push($res, ['filename' => $fObj->filename, 'success' => false, 'msg' => 'upload failed: php filesystem interaction error'] );
 
@@ -83,6 +83,27 @@ class FileController extends Controller
 
         return json_encode($res);
     }
+
+	//go through all files in the upload dir ('f') and add them to the database as a file object if they are not already added
+	function populateDB(Request $request){
+		$pass = $request->pass;
+		if ($pass != env('ADMIN_PASS') ) return 'wrong password';
+
+		$filenames = scandir('f');
+		//var_dump($filenames);
+		foreach ($filenames as $fn){
+			if (File::where('filename', $fn)->first() != null) continue; //file already in DB
+
+			//get file data then make new file obj on db
+			$f = new File();
+			$f->path = 'f/' . $fn;
+			$f->filesize = filesize('f/' . $fn);
+			$f->filename = $fn;
+			if ($f->save() ) print($fn . ' saved <br>');
+
+		}
+		return 0;
+	}
 
     /**
      * Display the specified resource.
