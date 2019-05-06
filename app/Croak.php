@@ -7,11 +7,15 @@ use Illuminate\Database\Eloquent\Model;
 class Croak extends Model
 {
     protected $fillable = [
-      'x', 'y', 'ip', 'type', 'content', 'fade_rate', 'file_id'
+      'x', 'y', 'ip', 'type', 'content', 'fade_rate', 'file_id', 'p_id'
     ];
 
     public function user(){
       return $this->belongsTo('App\User');
+    }
+
+    public function parent(){
+      return $this->belongsTo('App\Croak');
     }
 
     public function tags(){

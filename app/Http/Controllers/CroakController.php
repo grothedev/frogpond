@@ -71,6 +71,14 @@ class CroakController extends Controller
           }
         }
 
+        if (isset($req->p_id)){
+          for ($i = 0; $i < sizeof($result); $i++){
+            if ($result[$i]['p_id'] != $req->p_id){
+              unset($result[$i]); //does i need to be decremented also?
+            }
+          }
+        }
+
         //return $croaks;
         return $result;
     }
