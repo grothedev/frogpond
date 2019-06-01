@@ -17,7 +17,7 @@ class CreateTagsTable extends Migration
             $table->increments('id');
             $table->string('label')->unique();
             $table->timestamps();
-            $table->integer('refs'); //# of times referenced by croaks
+            $table->integer('refs')->default(0); //# of times referenced by croaks
         });
 
         Schema::create('croak_tag', function (Blueprint $table){

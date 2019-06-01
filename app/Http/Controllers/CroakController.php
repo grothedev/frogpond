@@ -124,14 +124,12 @@ class CroakController extends Controller
       }
       if (isset($request->p_id)){
         $c->p_id = $request->p_id;
-      } else {
-        $c->p_id = 0;
       }
       $c->ip = \Request::getClientIp(true);
       $c->content = $request->content;
       $c->fade_rate = .6;
       $c->score = 0;
-      
+
       /*
       if (Auth::guest()){
         //post anonymously
@@ -144,8 +142,11 @@ class CroakController extends Controller
       if ($saved = $c->save()){
         $tags = explode(',', $request->tags);
         foreach( $tags as $tag){
-          $t = Tag::firstOrCreate(['label' => $tag]);
-          $c->tags()->attach($t['id']);
+          $tid = Tag::firstOrCreate(['label' => $tag])['id'];
+          $t = Tag::findOrFail($tid);
+          $t->refs += 1;
+          $t->save();
+          $c->tags()->attach($tid);
         }
 
 
