@@ -75,7 +75,7 @@ class FileController extends Controller
           }
           $m = $f->move($dst,$fObj->filename);
 
-          if ($s && !is_null($m)) array_push($res, ['filename' => $fObj->filename, 'success' => true] );
+          if ($s && !is_null($m)) array_push($res, ['filename' => $fObj->filename, 'url' => "http://grothe.ddns.net/f/" . $fObj->filename, 'success' => true] );
           else array_push($res, ['filename' => $fObj->filename, 'success' => false, 'msg' => 'upload failed: php filesystem interaction error'] );
 
         }
