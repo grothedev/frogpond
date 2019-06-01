@@ -6,6 +6,7 @@ use App\Tag;
 use App\Croak;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class TagController extends Controller
 {
@@ -17,10 +18,19 @@ class TagController extends Controller
     public function index(Request $request)
     {
 
+		$tags; // = Tag::all();
+
+		if (isset($request->n)){
+			$tags = DB::table('tags')->orderBy('refs', 'desc')->take((int)$request->n)->get();
+		} else {
+			$tags = Tag::all();
+		}
+
+		/* TODO get tags within a radius
       if (isset($request->radius) && isset($request->x) && isset($request->y) ){
         $rx = $request->x; $ry = $request->y;
         $croaks = Croak::all();
-        
+
 
         for ($i = 0; $i < sizeof($croaks); $i++){
             $c = $croaks[$i];
@@ -29,22 +39,20 @@ class TagController extends Controller
                 echo $c->content;
             }
         }
-        
+
         return $croaks;
         //then find the top n most used tags of those posts
         foreach($croaks as $c){
             $tags = $c->tags();
-            
+
         }
         /*
         for ($i = 0; $i < sizeof($tags); $i++){
-          
+
         }
         */
-      } else {
-        $tags = Tag::all();
+
         return $tags;
-      }
 
     }
 
