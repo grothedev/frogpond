@@ -9,6 +9,10 @@ use Illuminate\Http\Request;
 
 class CroakController extends Controller
 {
+
+	function checkpid($e){
+		return isset($e['p_id']);
+	}
     /**
      * Display a listing of the resource.
      *
@@ -16,6 +20,7 @@ class CroakController extends Controller
      */
     public function index(Request $req)
     {
+		//global $result;
         $result = array();
         $croaks = Croak::all();
 
@@ -71,17 +76,26 @@ class CroakController extends Controller
           }
         }
 
+		$actualresult = Array(); //i'm starting to see why people hate php now
         if (isset($req->p_id)){
-          for ($i = 0; $i < sizeof($result); $i++){
-            if ($result[$i]['p_id'] != $req->p_id){
-              unset($result[$i]); //does i need to be decremented also?
-            }
+			//$result = array_filter($result, "checkpid");
+          for ($j = 0; $j < sizeof($result); $j=$j+1){
+			if ($result[$j]['p_id'] != null && $result[$j]['p_id'] == $req->p_id){
+				array_push($actualresult, $result[$j]);
+				//continue;
+			}
+			//both unset and array_splice did not work properly
+			//unset($result[$j]);
+             //$result = array_splice($result, $j, 1);
           }
+          return $actualresult;
         }
 
         //return $croaks;
         return $result;
     }
+
+
 
     public function attachFilesTags($croak){
       $result = array();
