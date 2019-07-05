@@ -124,7 +124,6 @@ class CroakController extends Controller
      */
     public function store(Request $request)
     {
-
       $c = new Croak();
       $c->type = $request->type;
       if (!isset($request->x) || !isset($request->y)){
@@ -165,16 +164,21 @@ class CroakController extends Controller
 
 
         $files = $request->file('f');
-        $dst = 'uploaded_files';
+        $dst = 'f';
         if (!is_null($files)){
+
           foreach($files as $f){
-            $file = File::firstOrCreate(['filename' => $f->getClientOriginalName(), 'path' => $dst . '/' . $f->getClientOriginalName(), 'filesize' => $f->getSize()]);
+			  $file;
+			  if (File::where('filename', '=', $f->getClientOriginalName())->first() == null){
+				$file = File::create(['filename' => $f->getClientOriginalName(), 'path' => $dst . '/' . $f->getClientOriginalName(), 'filesize' => $f->getSize()]);
+				$f->move($dst,$file->filename);
+			}
             $c->files()->attach($file['id']);
           }
         }
 
 
-
+	//return var_dump($files);
         return 0;
       } else {
         return $saved;
