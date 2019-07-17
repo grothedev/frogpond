@@ -10,9 +10,10 @@ use Illuminate\Http\Request;
 class CroakController extends Controller
 {
 
-	function checkpid($e){
-		return isset($e['p_id']);
-	}
+    function checkpid($e){
+      return isset($e['p_id']);
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -20,7 +21,7 @@ class CroakController extends Controller
      */
     public function index(Request $req)
     {
-		//global $result;
+		    //global $result;
         $result = array();
         $croaks = Croak::all();
 
@@ -68,24 +69,26 @@ class CroakController extends Controller
         if (isset($req->radius) && isset($req->x) && isset($req->y)){
           for ($i = 0; $i < sizeof($result); $i++){
             $c = $result[$i];
-            var_dump($c);
-            if ( abs( (int)$c['x'] * (int)$c['x'] + (int)$c['y'] * (int)$c['y']) > (int)$req->radius * (int)$req->radius ){
+            //var_dump($c);
+            $dist = acos( sin($req->y) * sin($c['y']) + cos($req->y) * cos($c['y']) * cos($req->x - $c['x']) );
+            echo $dist . '<br>';
+            if ( $dist > (int)$req->radius * (int)$req->radius ){
               //print($c['x'] . ' ' . $c['id'] . '\n');
               unset($result[$i]);
             }
           }
         }
 
-		$actualresult = Array(); //i'm starting to see why people hate php now
+		    $actualresult = Array(); //i'm starting to see why people hate php now
         if (isset($req->p_id)){
-			//$result = array_filter($result, "checkpid");
+		    	//$result = array_filter($result, "checkpid");
           for ($j = 0; $j < sizeof($result); $j=$j+1){
-			if ($result[$j]['p_id'] != null && $result[$j]['p_id'] == $req->p_id){
-				array_push($actualresult, $result[$j]);
-				//continue;
-			}
-			//both unset and array_splice did not work properly
-			//unset($result[$j]);
+		      	if ($result[$j]['p_id'] != null && $result[$j]['p_id'] == $req->p_id){
+			      	array_push($actualresult, $result[$j]);
+				      //continue;
+			      }
+			      //both unset and array_splice did not work properly
+		      	//unset($result[$j]);
              //$result = array_splice($result, $j, 1);
           }
           return $actualresult;

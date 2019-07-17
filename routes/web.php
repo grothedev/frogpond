@@ -26,6 +26,10 @@ Route::get('populatefdb', function(){
 	return view('populate_files');
 });
 
+Route::get('phptest', function(){
+	return view('phptest');
+});
+
 //Route::get('/', 'HomeController@index');
 
 Auth::routes();
