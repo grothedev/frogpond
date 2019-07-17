@@ -9,6 +9,10 @@ use Illuminate\Http\Request;
 
 class CroakController extends Controller
 {
+
+	function checkpid($e){
+		return isset($e['p_id']);
+	}
     /**
      * Display a listing of the resource.
      *
@@ -16,6 +20,7 @@ class CroakController extends Controller
      */
     public function index(Request $req)
     {
+		//global $result;
         $result = array();
         $croaks = Croak::all();
 
@@ -71,17 +76,26 @@ class CroakController extends Controller
           }
         }
 
+		$actualresult = Array(); //i'm starting to see why people hate php now
         if (isset($req->p_id)){
-          for ($i = 0; $i < sizeof($result); $i++){
-            if ($result[$i]['p_id'] != $req->p_id){
-              unset($result[$i]); //does i need to be decremented also?
-            }
+			//$result = array_filter($result, "checkpid");
+          for ($j = 0; $j < sizeof($result); $j=$j+1){
+			if ($result[$j]['p_id'] != null && $result[$j]['p_id'] == $req->p_id){
+				array_push($actualresult, $result[$j]);
+				//continue;
+			}
+			//both unset and array_splice did not work properly
+			//unset($result[$j]);
+             //$result = array_splice($result, $j, 1);
           }
+          return $actualresult;
         }
 
         //return $croaks;
         return $result;
     }
+
+
 
     public function attachFilesTags($croak){
       $result = array();
@@ -110,7 +124,6 @@ class CroakController extends Controller
      */
     public function store(Request $request)
     {
-
       $c = new Croak();
       $c->type = $request->type;
       if (!isset($request->x) || !isset($request->y)){
@@ -124,14 +137,12 @@ class CroakController extends Controller
       }
       if (isset($request->p_id)){
         $c->p_id = $request->p_id;
-      } else {
-        $c->p_id = 0;
       }
       $c->ip = \Request::getClientIp(true);
       $c->content = $request->content;
       $c->fade_rate = .6;
       $c->score = 0;
-      
+
       /*
       if (Auth::guest()){
         //post anonymously
@@ -144,22 +155,30 @@ class CroakController extends Controller
       if ($saved = $c->save()){
         $tags = explode(',', $request->tags);
         foreach( $tags as $tag){
-          $t = Tag::firstOrCreate(['label' => $tag]);
-          $c->tags()->attach($t['id']);
+          $tid = Tag::firstOrCreate(['label' => $tag])['id'];
+          $t = Tag::findOrFail($tid);
+          $t->refs += 1;
+          $t->save();
+          $c->tags()->attach($tid);
         }
 
 
         $files = $request->file('f');
-        $dst = 'uploaded_files';
+        $dst = 'f';
         if (!is_null($files)){
+
           foreach($files as $f){
-            $file = File::firstOrCreate(['filename' => $f->getClientOriginalName(), 'path' => $dst . '/' . $f->getClientOriginalName(), 'filesize' => $f->getSize()]);
+			  $file;
+			  if (File::where('filename', '=', $f->getClientOriginalName())->first() == null){
+				$file = File::create(['filename' => $f->getClientOriginalName(), 'path' => $dst . '/' . $f->getClientOriginalName(), 'filesize' => $f->getSize()]);
+				$f->move($dst,$file->filename);
+			}
             $c->files()->attach($file['id']);
           }
         }
 
 
-
+	//return var_dump($files);
         return 0;
       } else {
         return $saved;
