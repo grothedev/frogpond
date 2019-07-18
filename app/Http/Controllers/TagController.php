@@ -18,43 +18,36 @@ class TagController extends Controller
     public function index(Request $request)
     {
 
-		$tags; // = Tag::all();
+      $tags = Tag::all();
 
-		if (isset($request->n)){
-			$tags = DB::table('tags')->orderBy('refs', 'desc')->take((int)$request->n)->get();
-		} else {
-			$tags = Tag::all();
-		}
-
-		/* TODO get tags within a radius
       if (isset($request->radius) && isset($request->x) && isset($request->y) ){
-        $rx = $request->x; $ry = $request->y;
-        $croaks = Croak::all();
+        $lonA = $request->x * pi()/180.0; 
+        $latA = $request->y * pi()/180.0;
 
-
-        for ($i = 0; $i < sizeof($croaks); $i++){
-            $c = $croaks[$i];
-            if (abs($c->x * $c->x + $c->y * $c->y - ($rx*$rx + $ry*$ry)) > $request->radius * $request->radius ){
-                unset($croaks[$i]);
-                echo $c->content;
-            }
-        }
-
-        return $croaks;
-        //then find the top n most used tags of those posts
-        foreach($croaks as $c){
-            $tags = $c->tags();
-
-        }
-        /*
         for ($i = 0; $i < sizeof($tags); $i++){
-
+          $cks = $tags[$i]->croaks()->get();
+          foreach ($cks as $c){ //better idea: each tag should have a list of locations associated with it that is updated upon each croak submit
+            $latB = $c['y'] * pi()/180.0;
+            $lonB = $c['x'] * pi()/180.0;
+            $dist = acos( sin($latA) * sin($latB) + cos($latA) * cos($latB) * cos($lonA - $lonB) ) * 6371; //km
+            if ( $dist < (int)$request->radius + 20){ //add to account for error
+              continue 2; //tag has a croak that is within range, so check next tag
+            }
+            if ($i = sizeof($tags) - 1) unset($tags[$i]);
+          }
+          
         }
-        */
+      }
 
-        return $tags;
+      if (isset($request->n)){
+        //$tags = DB::table('tags')->orderBy('refs', 'desc')->take((int)$request->n)->get();
+        $tags = $tags->sortByDesc('refs')->take((int)$request->n);
+      } else {
+        $tags = Tag::all();
+      }
 
-    }
+      return $tags;
+  }
 
     /**
      * Show the form for creating a new resource.
