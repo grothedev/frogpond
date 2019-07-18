@@ -67,7 +67,8 @@ class CroakController extends Controller
         }
 
         if (isset($req->radius) && isset($req->x) && isset($req->y)){
-          for ($i = 0; $i < sizeof($result); $i++){
+          $s = sizeof($result);
+          for ($i = 0; $i < $s; $i++){
             $c = $result[$i];
             $latA = $req->y * pi()/180.0;
             $lonA = $req->x * pi()/180.0;
@@ -75,16 +76,16 @@ class CroakController extends Controller
             $lonB = $c['x'] * pi()/180.0;
             $dist = acos( sin($latA) * sin($latB) + cos($latA) * cos($latB) * cos($lonA - $lonB) ) * 6371; //km
             
+            //echo 'Crk ' . $c['id'] . ': ' . $dist . ' ';
+
             //echo $dist . '<br>';
             if ( $dist > (int)$req->radius + 20){ //add to account for error
-              echo 'beyond range: ' . $dist . PHP_EOL;
+              //echo 'beyond range';
               unset($result[$i]);
-            } else {
-              echo 'in range: ' . $dist . PHP_EOL;
             }
           }
         }
-
+        
 		    $actualresult = Array(); //i'm starting to see why people hate php now
         if (isset($req->p_id)){
 		    	//$result = array_filter($result, "checkpid");
