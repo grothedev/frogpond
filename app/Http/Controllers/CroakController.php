@@ -69,12 +69,18 @@ class CroakController extends Controller
         if (isset($req->radius) && isset($req->x) && isset($req->y)){
           for ($i = 0; $i < sizeof($result); $i++){
             $c = $result[$i];
-            //var_dump($c);
-            $dist = acos( sin($req->y) * sin($c['y']) + cos($req->y) * cos($c['y']) * cos($req->x - $c['x']) );
-            echo $dist . '<br>';
-            if ( $dist > (int)$req->radius * (int)$req->radius ){
-              //print($c['x'] . ' ' . $c['id'] . '\n');
+            $latA = $req->y * pi()/180.0;
+            $lonA = $req->x * pi()/180.0;
+            $latB = $c['y'] * pi()/180.0;
+            $lonB = $c['x'] * pi()/180.0;
+            $dist = acos( sin($latA) * sin($latB) + cos($latA) * cos($latB) * cos($lonA - $lonB) ) * 6371; //km
+            
+            //echo $dist . '<br>';
+            if ( $dist > (int)$req->radius + 20){ //add to account for error
+              echo 'beyond range: ' . $dist . PHP_EOL;
               unset($result[$i]);
+            } else {
+              echo 'in range: ' . $dist . PHP_EOL;
             }
           }
         }
