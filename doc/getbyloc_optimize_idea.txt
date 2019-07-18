@@ -1,0 +1,22 @@
+FP API idea: location resource
+purpose: to optimize getting tags by location.
+
+tag has many locations, croak has a location, location has many tags/croaks
+	for finding tags in a region, only need to check if each tag has a loc within radius.
+	upon each new croak, append its loc to locs of each tag if that tag does not already have a close enough loc (how to derive threshold?)
+
+	Location:
+		- id
+		- lat
+		- lon
+		- timestamp
+		- tags: []
+		- croaks: []
+
+	Croak:
+		[...]
+		- loc: Location
+
+	Tag:
+		[...]
+		- locs: Location[]
