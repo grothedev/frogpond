@@ -41,9 +41,9 @@ class TagController extends Controller
 
       if (isset($request->n)){
         //$tags = DB::table('tags')->orderBy('refs', 'desc')->take((int)$request->n)->get();
-        $tags = $tags->sortByDesc('refs')->take((int)$request->n);
-      } else {
-        $tags = Tag::all();
+        $tags = array_values($tags->sortByDesc('refs')->take((int)$request->n)->all()); 
+     } else {
+        $tags = $tags->toArray();
       }
 
       return $tags;
