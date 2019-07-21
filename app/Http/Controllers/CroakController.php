@@ -75,17 +75,19 @@ class CroakController extends Controller
             $latB = $c['y'] * pi()/180.0;
             $lonB = $c['x'] * pi()/180.0;
             $dist = acos( sin($latA) * sin($latB) + cos($latA) * cos($latB) * cos($lonA - $lonB) ) * 6371; //km
-            
+
             //echo 'Crk ' . $c['id'] . ': ' . $dist . ' ';
 
             //echo $dist . '<br>';
             if ( $dist > (int)$req->radius + 20){ //add to account for error
               //echo 'beyond range';
               unset($result[$i]);
-            }
+            } else {
+				$result[$i]['distance'] = $dist; //give dist to requester while we have it so they don't have to recalculate it
+			}
           }
         }
-        
+
 		    $actualresult = Array(); //i'm starting to see why people hate php now
         if (isset($req->p_id)){
 		    	//$result = array_filter($result, "checkpid");
