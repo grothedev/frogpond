@@ -149,6 +149,9 @@ class CroakController extends Controller
       }
       if (isset($request->p_id)){
         $c->p_id = $request->p_id;
+        $p = Croak::find($c->p_id);
+        $p->replies += 1;
+        $p->save();
       }
       $c->ip = \Request::getClientIp(true);
       $c->content = $request->content;
