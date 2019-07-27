@@ -26,7 +26,10 @@ Route::get('populatefdb', function(){
 	return view('populate_files');
 });
 
-Route::get('c', 'CroakController@view');
+Route::get('c/{id}', function($id){
+  $c = App\Croak::find($id);
+  return view('c', compact('c'));
+});
 
 Route::get('phptest', function(){
 	return view('phptest');
