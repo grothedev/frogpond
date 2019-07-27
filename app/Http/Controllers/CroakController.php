@@ -203,6 +203,12 @@ class CroakController extends Controller
 
     }
 
+	//for read-only web view (not api)
+    public function view($id){
+		$c = Croak::findOrFail($id);
+		return view('c', compact('c'));
+	}
+
     /**
      * Display the specified resource.
      *
