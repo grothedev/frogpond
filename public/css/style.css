@@ -1,3 +1,4 @@
+
 #display-zone{
 	width: 100%;
 }
@@ -7,8 +8,11 @@
 }
 
 .container{
-  margin-left: 2rem;
-  margin-top: 1rem;
+  margin-left: 3%;
+}
+
+p{
+  font-size: larger;
 }
 
 .banner{
@@ -21,13 +25,10 @@
 	margin-left: 2rem;
 }
 
-p{
-  color: green;
-}
-
 .footer{
 	position: relative;
-	bottom: 0;
+  bottom: 0;
+  
 	margin: auto;
 	width: 96%;
 	padding: 2rem;
