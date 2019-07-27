@@ -5,3 +5,21 @@
 #input-zone{
 	padding: 1rem;
 }
+
+#container{
+  margin-left: 2rem;
+  margin-top: 1rem;
+}
+
+p{
+  color: green;
+}
+
+.footer{
+	position: relative;
+	bottom: 0;
+	margin: auto;
+	width: 96%;
+	padding: 2rem;
+	border-top: dotted black 1px;
+}

@@ -1,7 +1,8 @@
 @extends('layouts.app')
 
-@section('content')
 <?php
+  //setup nice looking date string
+
   $tags = [];
   $tagStr = '';
   foreach ($c->tags as $t){
@@ -10,7 +11,6 @@
   }
 ?>
 
-
 <html>
   <div id = "container">
     <h3>{!! $c->created_at !!}</h3>
@@ -18,4 +18,3 @@
     <small><i>Tags</i>: {!! $tagStr !!}</small>
   </div>
 </html>
-@endsection
