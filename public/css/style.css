@@ -6,9 +6,19 @@
 	padding: 1rem;
 }
 
-#container{
+.container{
   margin-left: 2rem;
   margin-top: 1rem;
+}
+
+.banner{
+	width: 100%;
+	border-bottom: 1px black solid;
+	margin-bottom: 3rem;
+}
+
+.banner-title{
+	margin-left: 2rem;
 }
 
 p{

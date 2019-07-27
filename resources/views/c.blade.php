@@ -11,6 +11,7 @@
   }
 ?>
 
+@section('content')
 <html>
   <div id = "container">
     <h3>{!! $c->created_at !!}</h3>
@@ -18,3 +19,4 @@
     <small><i>Tags</i>: {!! $tagStr !!}</small>
   </div>
 </html>
+@endsection

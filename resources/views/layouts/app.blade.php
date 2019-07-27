@@ -29,6 +29,7 @@
 	</div>
   -->
 
+  @yield('content')
 
 	<div class = "footer">
 		<a href = "">About FrogPond</a>
