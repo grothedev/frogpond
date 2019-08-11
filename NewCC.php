@@ -67,28 +67,37 @@ class CroakController extends Controller
         }
 
         if (isset($req->radius) && isset($req->x) && isset($req->y)){
-          $s = sizeof($result);
-          $newresult = array();
-          for ($i = 0; $i < $s; $i++){
-            $c = $result[$i];
-            $latA = $req->y * pi()/180.0;
-            $lonA = $req->x * pi()/180.0;
-            $latB = $c['y'] * pi()/180.0;
-            $lonB = $c['x'] * pi()/180.0;
-            $dist = acos( sin($latA) * sin($latB) + cos($latA) * cos($latB) * cos($lonA - $lonB) ) * 6371; //km
+			$s = sizeof($result);
+			$newresult = array();
+			for ($i = 0; $i < $s; $i++){
+				$c = $result[$i];
+				$latA = $req->y * pi()/180.0;
+				$lonA = $req->x * pi()/180.0;
+				$latB = $c['y'] * pi()/180.0;
+				$lonB = $c['x'] * pi()/180.0;
+				$dist = acos( sin($latA) * sin($latB) + cos($latA) * cos($latB) * cos($lonA - $lonB) ) * 6371; //km
 
-            //echo 'Crk ' . $c['id'] . ': ' . $dist . ' ';
+				//echo 'Crk ' . $c['id'] . ': ' . $dist . ' ';
 
-            //echo $dist . '<br>';
-            if ($dist < (int) $req->radius + 20){
-              $result[$i]['distance'] = $dist;
-              array_push($newresult, $result[$i]);
-            }
-          }
-          $result = $newresult;
-        }
+				//echo $dist . '<br>';
+				/* using unset() fucks up the array
+				if ( $dist > (int)$req->radius + 20){ //add to account for error
+				  //echo 'beyond range';
+				  unset($result[$i]);
+				} else {
+					$result[$i]['distance'] = $dist; //give dist to requester while we have it so they don't have to recalculate it
+				}
+				* */
 
-		    $actualresult = Array(); //i'm starting to see why people hate php now
+				if ($dist < (int) $req->radius + 20){
+					$result[$i]['distance'] = $dist;
+					array_push($newresult, $result[$i]);
+				}
+           }
+           $result = $newresult;
+		}
+
+        $actualresult = Array(); //i'm starting to see why people hate php now
         if (isset($req->p_id)){
 		    	//$result = array_filter($result, "checkpid");
           for ($j = 0; $j < sizeof($result); $j=$j+1){
@@ -184,9 +193,10 @@ class CroakController extends Controller
 
           foreach($files as $f){
 			  $file;
-			  if (File::where('filename', '=', $f->getClientOriginalName())->first() == null){
+			  if ( ($file = File::where('filename', '=', $f->getClientOriginalName())->first()) == null){
 				$file = File::create(['filename' => $f->getClientOriginalName(), 'path' => $dst . '/' . $f->getClientOriginalName(), 'filesize' => $f->getSize()]);
-				$f->move($dst,$file->filename);
+				$upload_suc = $f->move($dst,$file->filename);
+
 			}
             $c->files()->attach($file['id']);
           }
@@ -202,12 +212,6 @@ class CroakController extends Controller
 
 
     }
-
-	//for read-only web view (not api)
-    public function roView($id){
-		$c = Croak::findOrFail($id);
-		return view('c', compact('c'));
-	}
 
     /**
      * Display the specified resource.
