@@ -61,6 +61,7 @@ return [
             'database' => env('DB_DATABASE'),
             'username' => env('DB_USERNAME'),
             'password' => env('DB_PASSWORD'),
+            'unix_socket' => '/cloudsql/frogpond-249016:us-central1:fp-api',
             'charset' => 'utf8',
             'prefix' => '',
             'schema' => 'public',

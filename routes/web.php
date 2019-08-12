@@ -35,6 +35,10 @@ Route::get('phptest', function(){
 	return view('phptest');
 });
 
+Route::get('about', function(){
+  return view('about');
+});
+
 //Route::get('/', 'HomeController@index');
 
 Auth::routes();

@@ -32,9 +32,9 @@
   @yield('content')
 
 	<div class = "footer">
-		<a href = "">About FrogPond</a>
+		<a href = "/about">About FrogPond</a>
 		<div style = "float:right;">
-			<a href = "">Source Code</a>
+			<a href = "https://github.com/grothedev/frogpond">Source Code</a>
 		</div>
 	</div>
 

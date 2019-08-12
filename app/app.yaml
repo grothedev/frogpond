@@ -1,0 +1,22 @@
+runtime: php
+env: flex
+
+runtime_config:
+  document_root: public
+
+# Ensure we skip ".env", which is only for local development
+skip_files:
+  - .env
+
+env_variables:
+  # Put production environment variables here.
+  APP_LOG: errorlog
+  APP_KEY: base64:PvJr/XbyPt5bW9zYcviC9k+r3+jLzMBp3SiC1m3pxxM=
+  DB_HOST: localhost
+  DB_DATABASE: pond
+  DB_USERNAME: postgres
+  DB_PASSWORD: goddess of the underworld
+  DB_SOCKET: "/cloudsql/frogpond-249016:us-central1:fp-api"
+
+beta_settings:
+  cloud_sql_instances: "frogpond-249016:us-central1:fp-api"
