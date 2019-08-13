@@ -11,7 +11,7 @@
   }
 
   $file = $c->files->first();
-  $fHTML = 'No file attachments';
+  $fileHTML = 'No file attachments';
   if (!is_null($file)){
     
     if ( fileIsType($file['filename'], '.jpg') || fileIsType($file['filename'], '.jpeg') || fileIsType($file['filename'], '.gif') || fileIsType($file['filename'], '.png') ){
