@@ -108,7 +108,6 @@ class CroakController extends Controller
     }
 
 
-
     public function attachFilesTags($croak){
       $result = array();
 
@@ -183,11 +182,11 @@ class CroakController extends Controller
         if (!is_null($files)){
 
           foreach($files as $f){
-			  $file;
-			  if (File::where('filename', '=', $f->getClientOriginalName())->first() == null){
-				$file = File::create(['filename' => $f->getClientOriginalName(), 'path' => $dst . '/' . $f->getClientOriginalName(), 'filesize' => $f->getSize()]);
-				$f->move($dst,$file->filename);
-			}
+			      $file;
+			      if (File::where('filename', '=', $f->getClientOriginalName())->first() == null){
+              $file = File::create(['filename' => $f->getClientOriginalName(), 'path' => $dst . '/' . $f->getClientOriginalName(), 'filesize' => $f->getSize()]);
+              $f->move($dst,$file->filename);
+            }
             $c->files()->attach($file['id']);
           }
         }
