@@ -98,8 +98,9 @@ class CroakController extends Controller
                   break 2;
                 }
               }
-              array_push($res1, $result[$i]);
+              if ($j == sizeof($result[$i]['tags'])-1) array_push($res1, $result[$i]);
             }
+            
           }
           $result = $res1;
         }
