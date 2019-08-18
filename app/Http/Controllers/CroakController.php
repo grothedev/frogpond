@@ -88,6 +88,22 @@ class CroakController extends Controller
           $result = $newresult;
         }
 
+        if (isset($req->exclude)){
+          $excluded = explode(',', $req->exclude);
+          foreach ($result as $c){
+            foreach ($c->tags as $t){
+              foreach ($excluded as $x){
+                if ($t->label == $x){
+                  unset($c);
+                  break 2;
+                }
+              }
+            }
+          }
+        }
+
+
+        //TODO later: comment croaks by radius
 		    $actualresult = Array(); //i'm starting to see why people hate php now
         if (isset($req->p_id)){
 		    	//$result = array_filter($result, "checkpid");
