@@ -88,35 +88,37 @@ class CroakController extends Controller
           $result = $newresult;
         }
 
+        $res1 = Array();
         if (isset($req->exclude)){
           $excluded = explode(',', $req->exclude);
-          foreach ($result as $c){
-            foreach ($c['tags'] as $t){
+          for($i = 0; $i < sizeof($result); $i++){
+            for ($j = 0; $j < sizeof($result[$i]['tags']); $j++){
               foreach ($excluded as $x){
-                if ($t['label'] == $x){
-                  unset($c);
+                if ($result[$i]['tags'][$j]['label'] == $x){
                   break 2;
                 }
               }
+              array_push($res1, $result[$i]);
             }
           }
+          $result = $res1;
         }
 
 
         //TODO later: comment croaks by radius
-		    $actualresult = Array(); //i'm starting to see why people hate php now
+		    $res2 = Array(); //i'm starting to see why people hate php now
         if (isset($req->p_id)){
 		    	//$result = array_filter($result, "checkpid");
           for ($j = 0; $j < sizeof($result); $j=$j+1){
 		      	if ($result[$j]['p_id'] != null && $result[$j]['p_id'] == $req->p_id){
-			      	array_push($actualresult, $result[$j]);
+			      	array_push($res2, $result[$j]);
 				      //continue;
 			      }
 			      //both unset and array_splice did not work properly
 		      	//unset($result[$j]);
              //$result = array_splice($result, $j, 1);
           }
-          return $actualresult;
+          return $res2;
         }
 
         //return $croaks;
