@@ -91,9 +91,9 @@ class CroakController extends Controller
         if (isset($req->exclude)){
           $excluded = explode(',', $req->exclude);
           foreach ($result as $c){
-            foreach ($c->tags as $t){
+            foreach ($c['tags'] as $t){
               foreach ($excluded as $x){
-                if ($t->label == $x){
+                if ($t['label'] == $x){
                   unset($c);
                   break 2;
                 }
