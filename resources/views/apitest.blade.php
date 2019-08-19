@@ -29,7 +29,7 @@
   <h3>Vote cast</h3>
   {!! Form::open(['url' => 'api/votes']) !!}
     croak id {!! Form::text('croak id') !!}
-    up/down {!! Form::checkbox('checked=up; unchecked=down', 'v') !!}
+    up/down {!! Form::text('0 or 1', 'v') !!}
     <button type = "submit">Submit</button>
   {!! Form::close() !!}
 

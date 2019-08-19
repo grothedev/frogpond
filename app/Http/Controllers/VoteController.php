@@ -37,10 +37,14 @@ class VoteController extends Controller
             $v = new Vote();
             $v->ip = $ip;
             $v->croak_id = $req->croak_id;
-            $v->v = $req->v;
+            if ($req->v == 0) {
+                $v->v = false;
+                $croak['score'] -= 1;
+            } else {
+                $v->v = true;
+                $croak['score'] += 1;
+            }
             $v->save();
-            if ($req->v) $croak['score'] += 1;
-            else $croak['score'] -= 1;
             $croak->save();
         } else {
             return $croak['score'];
