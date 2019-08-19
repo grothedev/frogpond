@@ -28,10 +28,11 @@ class VoteController extends Controller
     {
         $ip = \Request::getClientIp(true);
         $croak = Croak::findOrFail($req->croak_id);
+        $dupe = Vote::where('ip', '=', $ip);
 
-        if ($dupe = Vote::where('ip', '=', $ip)){
-            return $croak['score'];
-        } else {
+        if (is_null($croak)) return -1;
+
+        if (is_null($dupe)){
             $v = new Vote();
             $v->ip = $ip;
             $v->croak_id = $req->croak_id;
@@ -39,8 +40,9 @@ class VoteController extends Controller
             $v->save();
             if ($req->v) $croak['score'] += 1;
             else $croak['score'] -= 1;
-            
             $croak->save();
+        } else {
+            return $croak['score'];
         }
         
     }
