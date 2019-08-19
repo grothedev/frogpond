@@ -20,7 +20,7 @@ class CreateCroaksTable extends Migration
             $table->float('y');
             $table->ipAddress('ip');
             $table->integer('type'); // txt img aud vid
-            $table->longText('content');
+            $table->longText01('content');
             $table->float('fade_rate', 3, 2);
             $table->integer('score');
             
