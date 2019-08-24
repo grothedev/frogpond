@@ -21,3 +21,6 @@ Route::Resource('croaks', 'CroakController');
 Route::Resource('files', 'FileController');
 Route::Resource('tags', 'TagController');
 Route::Resource('votes', 'VoteController');
+Route::get('motd', function(){
+    return view('motd');
+});
