@@ -100,7 +100,7 @@ class CroakController extends Controller
               }
               if ($j == sizeof($result[$i]['tags'])-1) array_push($res1, $result[$i]);
             }
-            
+
           }
           $result = $res1;
         }
@@ -114,7 +114,10 @@ class CroakController extends Controller
 		      	if ($result[$j]['p_id'] != null && $result[$j]['p_id'] == $req->p_id){
 			      	array_push($res2, $result[$j]);
 				      //continue;
-			      }
+			      } else if ($result[$j]['p_id'] == null && $req->p_id <= 0 ){ //requesting root croaks
+              array_push($res2, $result[$j]);
+            }
+
 			      //both unset and array_splice did not work properly
 		      	//unset($result[$j]);
              //$result = array_splice($result, $j, 1);
