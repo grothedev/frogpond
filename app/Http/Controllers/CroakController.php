@@ -213,7 +213,7 @@ class CroakController extends Controller
           }
         }
 
-        return $c->id;
+        return $c;
       } else {
         return -1;
       }
