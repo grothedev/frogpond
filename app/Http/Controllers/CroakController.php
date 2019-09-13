@@ -215,9 +215,9 @@ class CroakController extends Controller
 
 
 	//return var_dump($files);
-        return $saved;
+        return $saved->id;
       } else {
-        return $saved;
+        return -1;
       }
     }
 
