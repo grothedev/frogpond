@@ -215,13 +215,10 @@ class CroakController extends Controller
 
 
 	//return var_dump($files);
-        return 0;
+        return $saved;
       } else {
         return $saved;
       }
-
-
-
     }
 
 	//for read-only web view (not api)
