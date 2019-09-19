@@ -158,7 +158,7 @@ class CroakController extends Controller
     public function store(Request $request)
     {
       $c = new Croak();
-      $c->type = $request->type;
+      
       if (!isset($request->x) || !isset($request->y)){
         $c->x = $c->y = 0;
       } else {
@@ -167,10 +167,13 @@ class CroakController extends Controller
       }
       if (!isset($request->type)){
         $c->type = 0;
+      } else {
+        $c->type = $request->type;
       }
       if (isset($request->p_id)){
         $c->p_id = $request->p_id;
         $p = Croak::find($c->p_id);
+        if (is_null($p)) return -1;
         $p->replies += 1;
         $p->save();
       }
