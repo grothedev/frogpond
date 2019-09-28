@@ -109,18 +109,26 @@ class CroakController extends Controller
         //TODO later: comment croaks by radius
 		    $res2 = Array(); //i'm starting to see why people hate php now
         if (isset($req->p_id)){
-		    	//$result = array_filter($result, "checkpid");
-          for ($j = 0; $j < sizeof($result); $j=$j+1){
-		      	if ($result[$j]['p_id'] != null && $result[$j]['p_id'] == $req->p_id){
-			      	array_push($res2, $result[$j]);
-				      //continue;
-			      } else if ($result[$j]['p_id'] == null && $req->p_id <= 0 ){ //requesting root croaks
-              array_push($res2, $result[$j]);
-            }
+          
+          //put all p_id ints into an array whether there is one given or multiple as string separated by commas
+          $pids = Array();
+          if (is_numeric($req->p_id)) array_push($pids, $req->p_id);
+          else {
+            $pids = explode(',', $req->p_id);
+          }
 
-			      //both unset and array_splice did not work properly
-		      	//unset($result[$j]);
-             //$result = array_splice($result, $j, 1);
+          foreach ($pids as $pid){
+            for ($j = 0; $j < sizeof($result); $j=$j+1){
+              if ($result[$j]['p_id'] != null && $result[$j]['p_id'] == $pid){
+                array_push($res2, $result[$j]);
+                //continue;
+              } else if ($result[$j]['p_id'] == null && $pid <= 0 ){ //requesting root croaks
+                array_push($res2, $result[$j]);
+              }
+              //both unset and array_splice did not work properly
+              //unset($result[$j]);
+              //$result = array_splice($result, $j, 1);
+            }
           }
           return $res2;
         }
