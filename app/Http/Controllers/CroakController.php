@@ -167,7 +167,9 @@ class CroakController extends Controller
     public function store(Request $request)
     {
       $c = new Croak();
-      
+      $tags = explode(',', $request->tags);
+      if (sizeof($tags) > 14) return -1; //too many tags
+
       if (!isset($request->x) || !isset($request->y)){
         $c->x = $c->y = 0;
       } else {
@@ -201,7 +203,7 @@ class CroakController extends Controller
 
       $saved = null;
       if ($saved = $c->save()){
-        $tags = explode(',', $request->tags);
+        
         foreach( $tags as $tag){
           $tid = Tag::firstOrCreate(['label' => $tag])['id'];
           $t = Tag::findOrFail($tid);
