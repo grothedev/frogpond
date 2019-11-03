@@ -111,11 +111,7 @@ class CroakController extends Controller
         if (isset($req->p_id)){
           
           //put all p_id ints into an array whether there is one given or multiple as string separated by commas
-          $pids = Array();
-          if (is_numeric($req->p_id)) array_push($pids, $req->p_id);
-          else {
-            $pids = explode(',', $req->p_id);
-          }
+          $pids = explode(',', $req->p_id);
 
           foreach ($pids as $pid){
             for ($j = 0; $j < sizeof($result); $j=$j+1){
@@ -152,9 +148,14 @@ class CroakController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(FormBuilder $fb)
     {
-        //
+        $form = $fb->create(\App\Forms\CroakForm::class, [
+          'method' => 'POST',
+          'url' => route('croak.store')
+        ]);
+
+        return view('croak.create', compact('form'));
     }
 
     /**
