@@ -21,7 +21,8 @@ Route::Resource('croaks', 'CroakController');
 Route::Resource('files', 'FileController');
 Route::Resource('tags', 'TagController');
 Route::Resource('votes', 'VoteController');
+Route::Resource('reports', 'ReportController');
 Route::get('motd', function(){
     return view('motd');
 });
-Route::get('croaks/report', 'CroakController@report');
+Route::post('croaks/report', 'CroakController@report');

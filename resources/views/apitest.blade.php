@@ -34,6 +34,15 @@
 
   <br>
 
+  <h3>Report croak</h3>
+  {!! Form::open(['url' => 'api/croaks/report']) !!}
+    croak id {!! Form::text('croak id') !!}
+    reason {!! Form::text('reason') !!}
+    <button type = "submit">Submit</button>
+  {!! Form::close() !!}
+
+  <br>
+
   <h3>Croak Comment post</h3>
   {!! Form::open(['url' => 'api/croaks', 'files' => true]) !!}
     content {!! Form::text('content') !!}

@@ -3,10 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Vote;
+use App\Report;
 use App\Croak;
 
-class VoteController extends Controller
+class ReportController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,7 +15,7 @@ class VoteController extends Controller
      */
     public function index()
     {
-        return Vote::all()->toArray();
+        return Report::all()->toArray();
     }
 
     /**
@@ -27,27 +27,20 @@ class VoteController extends Controller
     public function store(Request $req)
     {
         $ip = encrypt( \Request::getClientIp(true) );
-        $croak = Croak::findOrFail($req->croak_id);
-        $dupe = Vote::where('ip', '=', $ip)->where('croak_id', '=', $req->croak_id)->first();
+        $c = Croak::findOrFail($req->croak_id);
+        $dupe = Report::where('ip', '=', $ip)->where('croak_id', '=', $c->id)->first();
 
-        if (is_null($croak)) return -1;
-
+        if (is_null($c)) retun -1;
         if (is_null($dupe)){
-            $v = new Vote();
-            $v->ip = $ip;
-            $v->croak_id = $req->croak_id;
-            if ($req->v == 0) {
-                $v->v = false;
-                $croak['score'] -= 1;
-            } else {
-                $v->v = true;
-                $croak['score'] += 1;
-            }
-            $v->save();
-            $croak->save();
+            $r = new Report();
+            $r->ip = $ip;
+            $r->croak_id = $req->croak_id;
+            $r->reason = $req->reason;
+            $c['reports'] += 1;
+            $r->save();
+            $c->save();
         }
-        return $ip;
-        return $croak['score'];
+        return $c['reports'];
     }
 
     /**
@@ -58,7 +51,7 @@ class VoteController extends Controller
      */
     public function show($id)
     {
-        return Vote::find($id);
+        return Report::find($id);
     }
 
     /**
