@@ -18,11 +18,12 @@ class CreateCroaksTable extends Migration
             $table->timestamps();
             $table->float('x');
             $table->float('y');
-            $table->ipAddress('ip');
+            $table->text('ip');
             $table->integer('type'); // txt img aud vid
             $table->longText01('content');
             $table->float('fade_rate', 3, 2);
             $table->integer('score');
+            $table->integer('reports')->default(0);
             
             $table->integer('p_id')->unsigned()->nullable(); //parent id
             $table->foreign('p_id')->references('id')->on('croaks')->onDelete('cascade');

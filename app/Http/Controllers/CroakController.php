@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Croak;
 use App\Tag;
 use App\File;
+use App\Report;
+
 use Illuminate\Http\Request;
 
 class CroakController extends Controller
@@ -253,6 +255,29 @@ class CroakController extends Controller
         if ($croak->files()) $result['files'] = $croak->files()->get();
         return $result;
         //return CroakController::attachFilesTags($croak);
+    }
+
+    /**
+     * a user can report a croak for illegal content or spam.
+     * this function is basically the same as VoteController@store
+     */
+    public function report(Request $req){
+
+      $ip = encrypt( \Request::getClientIp(true) );
+      $c = Croak::findOrFail($req->croak_id);
+      $dupe = Report::where('ip', '=', $ip)->where('croak_id', '=', $id)->first();
+
+      if (is_null($c)) retun -1;
+      if (is_null($dupe)){
+        $r = new Report();
+        $r->ip = $ip;
+        $r->croak_id = $req->croak_id;
+        $r->reason = $req->reason;
+        $c['reports'] += 1;
+        $r->save();
+        $c->save();
+      }
+      return $c['reports'];
     }
 
     /**

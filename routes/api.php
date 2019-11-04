@@ -24,3 +24,4 @@ Route::Resource('votes', 'VoteController');
 Route::get('motd', function(){
     return view('motd');
 });
+Route::get('croaks/report', 'CroakController@report');

@@ -26,7 +26,7 @@ class VoteController extends Controller
      */
     public function store(Request $req)
     {
-        $ip = \Request::getClientIp(true);
+        $ip = encrypt( \Request::getClientIp(true) );
         $croak = Croak::findOrFail($req->croak_id);
         $dupe = Vote::where('ip', '=', $ip)->where('croak_id', '=', $req->croak_id)->first();
 
