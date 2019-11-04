@@ -27,7 +27,7 @@
 
   <h3>Vote cast</h3>
   {!! Form::open(['url' => 'api/votes']) !!}
-    croak id {!! Form::text('croak id') !!}
+    croak id {!! Form::text('croak_id') !!}
     up/down {!! Form::text('v') !!}
     <button type = "submit">Submit</button>
   {!! Form::close() !!}
@@ -36,7 +36,7 @@
 
   <h3>Report croak</h3>
   {!! Form::open(['url' => 'api/croaks/report']) !!}
-    croak id {!! Form::text('croak id') !!}
+    croak id {!! Form::text('croak_id') !!}
     reason {!! Form::text('reason') !!}
     <button type = "submit">Submit</button>
   {!! Form::close() !!}

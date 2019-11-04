@@ -259,19 +259,22 @@ class CroakController extends Controller
 
     public function report(Request $req){
       $ip = encrypt( \Request::getClientIp(true) );
-      $c = Croak::findOrFail($req->croak_id);
-      $dupe = Report::where('ip', '=', $ip)->where('croak_id', '=', $c->id)->first();
-
-      if (is_null($c)) retun -1;
-      if (is_null($dupe)){
-          $r = new Report();
-          $r->ip = $ip;
-          $r->croak_id = $req->croak_id;
-          $r->reason = $req->reason;
-          $c['reports'] += 1;
-          $r->save();
-          $c->save();
+      $croaks = Report::where('croak_id', '=', $req->croak_id)->get();
+      foreach ($croaks as $c){
+        if ( decrypt( $c->ip ) == \Request::getClientIp(true) ) return -1;
       }
+
+      $c = Croak::findOrFail($req->croak_id);
+      if (is_null($c)) retun -1;
+      
+      $r = new Report();
+      $r->ip = $ip;
+      $r->croak_id = $req->croak_id;
+      $r->reason = $req->reason;
+      $c['reports'] += 1;
+      $r->save();
+      $c->save();
+  
       return $c['reports'];
     }
 

@@ -27,26 +27,29 @@ class VoteController extends Controller
     public function store(Request $req)
     {
         $ip = encrypt( \Request::getClientIp(true) );
+        
         $croak = Croak::findOrFail($req->croak_id);
-        $dupe = Vote::where('ip', '=', $ip)->where('croak_id', '=', $req->croak_id)->first();
-
         if (is_null($croak)) return -1;
 
-        if (is_null($dupe)){
-            $v = new Vote();
-            $v->ip = $ip;
-            $v->croak_id = $req->croak_id;
-            if ($req->v == 0) {
-                $v->v = false;
-                $croak['score'] -= 1;
-            } else {
-                $v->v = true;
-                $croak['score'] += 1;
-            }
-            $v->save();
-            $croak->save();
+        $votes = Vote::where('croak_id', '=', $req->croak_id)->get()->toArray();
+        
+        foreach ($votes as $v){
+            if ( decrypt($v['ip']) == \Request::getClientIp(true) ) return -1;
         }
-        return $ip;
+        
+        $v = new Vote();
+        $v->ip = $ip;
+        $v->croak_id = $req->croak_id;
+        if ($req->v == 0) {
+            $v->v = false;
+            $croak['score'] -= 1;
+        } else {
+            $v->v = true;
+            $croak['score'] += 1;
+        }
+        $v->save();
+        $croak->save();
+
         return $croak['score'];
     }
 
