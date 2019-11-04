@@ -173,8 +173,8 @@ class CroakController extends Controller
       if (!isset($request->x) || !isset($request->y)){
         $c->x = $c->y = 0;
       } else {
-        $c->x = $request->x;
-        $c->y = $request->y;
+        $c->x = encrypt( $request->x );
+        $c->y = encrypt( $request->y );
       }
       if (!isset($request->type)){
         $c->type = 0;
@@ -188,7 +188,7 @@ class CroakController extends Controller
         $p->replies += 1;
         $p->save();
       }
-      $c->ip = \Request::getClientIp(true);
+      $c->ip = encrypt( \Request::getClientIp(true) );
       $c->content = $request->content;
       $c->fade_rate = .6;
       $c->score = 0;
