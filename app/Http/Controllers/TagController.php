@@ -27,8 +27,8 @@ class TagController extends Controller
         for ($i = 0; $i < sizeof($tags); $i++){
           $cks = $tags[$i]->croaks()->get();
           foreach ($cks as $c){ //better idea: each tag should have a list of locations associated with it that is updated upon each croak submit
-            $latB = $c['y'] * pi()/180.0;
-            $lonB = $c['x'] * pi()/180.0;
+            $latB = decrypt($c['y']) * pi()/180.0;
+            $lonB = decrypt($c['x']) * pi()/180.0;
             $dist = acos( sin($latA) * sin($latB) + cos($latA) * cos($latB) * cos($lonA - $lonB) ) * 6371; //km
             if ( $dist < (int)$request->radius + 20){ //add to account for error
               continue 2; //tag has a croak that is within range, so check next tag

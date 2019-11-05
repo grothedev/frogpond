@@ -75,8 +75,8 @@ class CroakController extends Controller
             $c = $result[$i];
             $latA = $req->y * pi()/180.0;
             $lonA = $req->x * pi()/180.0;
-            $latB = $c['y'] * pi()/180.0;
-            $lonB = $c['x'] * pi()/180.0;
+            $latB = decrypt($c['y']) * pi()/180.0;
+            $lonB = decrypt($c['x']) * pi()/180.0;
             $dist = acos( sin($latA) * sin($latB) + cos($latA) * cos($latB) * cos($lonA - $lonB) ) * 6371; //km
 
             //echo 'Crk ' . $c['id'] . ': ' . $dist . ' ';
