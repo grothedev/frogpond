@@ -16,8 +16,8 @@ class CreateCroaksTable extends Migration
         Schema::create('croaks', function (Blueprint $table) {
             $table->increments('id');
             $table->timestamps();
-            $table->float('x');
-            $table->float('y');
+            $table->text('x'); //string, not float, because encrypted and serialized
+            $table->text('y');
             $table->text('ip');
             $table->integer('type'); // txt img aud vid
             $table->longText('content');
