@@ -1,10 +1,10 @@
 (This guide is incomplete)
 
-#Frog Pond API:
+# Frog Pond API:
 
-    ###This API provides a way for developers to access and create croaks, files, and tags. It is a laravel application with a PostgreSQL database.  
+    ### This API provides a way for developers to access and create croaks, files, and tags. It is a laravel application with a PostgreSQL database.  
 
-#How to use the API:
+# How to use the API:
 
     - error messages
     - Resources
@@ -52,5 +52,5 @@
         - Croak
     
 
-#REST endpoints:
+# REST endpoints:
     - GET api/croaks 
