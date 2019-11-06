@@ -23,7 +23,7 @@ class CreateCroaksTable extends Migration
             $table->longText('content');
             $table->float('fade_rate', 3, 2);
             $table->integer('score');
-            $table->integer('reports')->default(0);
+            $table->integer('reports')->default(0); //should this actually be stored in the database? or should it be calculated on retrieval?
             
             $table->integer('p_id')->unsigned()->nullable(); //parent id
             $table->foreign('p_id')->references('id')->on('croaks')->onDelete('cascade');

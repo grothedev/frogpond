@@ -63,6 +63,7 @@ This API provides a way for developers to access and create croaks, files, and t
             - pid : list of ids of parent croaks separated by spaces, to get comments of multiple croaks
     - example
         - here is the JSON for one croak within the response array returned: ![croak json object](doc/img/croak.png)
+        - as you can see, the API automatically includes the tags and files associated with the croak in the response, as well as the number of replies. if you include coordinates and radius with your request, there will also be a distance included with each croak (km)
         - [see for yourself](http://grothe.ddns.net:8090/api/croaks)
 - POST croaks : submit a new croak
     - required parameters: x, y, content, tags, 
@@ -70,6 +71,7 @@ This API provides a way for developers to access and create croaks, files, and t
         - p_id : parent id of which this croak is a replay
         - type : if not 0
         - f : one file or an array of files
+    - returns the created croaks
     - error message : -1 on failure
 - GET tags : returns JSON list of tags, result based on query parameters
     - parameters
@@ -78,12 +80,16 @@ This API provides a way for developers to access and create croaks, files, and t
             - x : longitude
             - y : latitude
         - n : (int) to limit the number of tags received by the top n most-used tags
+    - example
+        - ![some tags](doc/img/tags.png)
+        - [api/tags](http://grothe.ddns.net:8090/api/tags)
 - there is currently no POST tags, as tags are meant to be created with croaks. however, i can imagine some use cases for other apps where tags should be able to created alone. 
 - GET files : returns a JSON list of files
-    - parameters
+    <!-- - parameters
         - tags : list of tags separated by commas
             - return only files associated with croaks that are associated with those tags
-        - mode : (0 or 1), 0 = associated with any given tag; 1 = associated with all given tags
+        - mode : (0 or 1), 0 = associated with any given tag; 1 = associated with all given tags -->
+    - construct a url by simply appending path onto the server address, like so: [http://173.22.78.225/f/far-out-man.jpg](http://173.22.78.225/f/far-out-man.jpg)
 - POST files : upload one or more files
     - parameters
         - f : file/s
