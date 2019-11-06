@@ -1,5 +1,3 @@
-(This guide is incomplete)
-
 # Frog Pond API:
 
 This API provides a way for developers to access and create croaks, files, and tags. It is a laravel application with a PostgreSQL database.  
@@ -104,4 +102,3 @@ This API provides a way for developers to access and create croaks, files, and t
         - reason : (string) optional
     - only one per ip address
     
-## Examples
