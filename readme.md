@@ -7,7 +7,7 @@ This API provides a way for developers to access and create croaks, files, and t
 ## How to use the API:
 
 - error messages
-- Resources
+- Resources 
     - Croak:
         - id (int) : primary key
         - created_at (string) : datetime croak was posted
@@ -45,12 +45,30 @@ This API provides a way for developers to access and create croaks, files, and t
         - reason (string) : optional why the croak is unallowed
         - created_at (string) : datetime vote was casted
         - croak_id (int) : which croak
-    - Getting Started
-        The most common use case is that you want to see croaks in your area having to do with any of some set of concepts. For this, you would use 
-    - Server Responses
-        - when retreiving resources, the API will often return additional associated data in the JSON response. 
-        - Croak
+- Getting Started
+    The most common use case is that you want to see croaks in your area having to do with any of some set of concepts. For this, you would use 
+- Server Responses
+    - when retreiving resources, the API will often return additional associated data in the JSON response. 
+    - Croak 
     
 
 ## REST endpoints:
-- GET api/croaks 
+- GET croaks : returns JSON list of croaks, result based on query parameters
+    - parameters
+        - tag association: give a list of tags and specify inclusive or exclusive
+            - tags : a list of tags separated by commas, 
+                - returns JSON list of croaks that have any of the given tags
+                - if croaks have to contain all given tags, give parameter mode=1
+        - location association: all of the following parameters must be set to get the croaks within some kilometers of some coordinate
+            - radius : in km
+            - x : longitude
+            - y : latitude
+        - siblings (comments of a parent croak): 
+            - pid : id of the parent croak
+            - pid : list of ids of parent croaks separated by spaces, to get comments of multiple croaks
+    - response
+        - [img here]
+- POST croaks : submit a new croak
+    - required parameters: x, y, content, tags, 
+
+    
