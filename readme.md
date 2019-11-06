@@ -6,7 +6,6 @@ This API provides a way for developers to access and create croaks, files, and t
 
 ## How to use the API:
 
-- error messages
 - Resources 
     - Croak:
         - id (int) : primary key
@@ -45,11 +44,7 @@ This API provides a way for developers to access and create croaks, files, and t
         - reason (string) : optional why the croak is unallowed
         - created_at (string) : datetime vote was casted
         - croak_id (int) : which croak
-- Getting Started
-    The most common use case is that you want to see croaks in your area having to do with any of some set of concepts. For this, you would use 
-- Server Responses
-    - when retreiving resources, the API will often return additional associated data in the JSON response. 
-    - Croak 
+
     
 
 ## REST endpoints:
@@ -66,9 +61,41 @@ This API provides a way for developers to access and create croaks, files, and t
         - siblings (comments of a parent croak): 
             - pid : id of the parent croak
             - pid : list of ids of parent croaks separated by spaces, to get comments of multiple croaks
-    - response
-        - [img here]
+    - example
+        - here is the JSON for one croak within the response array returned: ![croak json object](doc/img/croak.png)
+        - [see for yourself](http://grothe.ddns.net:8090/api/croaks)
 - POST croaks : submit a new croak
     - required parameters: x, y, content, tags, 
-
+    - optional parameters:
+        - p_id : parent id of which this croak is a replay
+        - type : if not 0
+        - f : one file or an array of files
+    - error message : -1 on failure
+- GET tags : returns JSON list of tags, result based on query parameters
+    - parameters
+        - location association: all of the following parameters must be set to get the tags within some kilometers of some coordinate
+            - radius : in km
+            - x : longitude
+            - y : latitude
+        - n : (int) to limit the number of tags received by the top n most-used tags
+- there is currently no POST tags, as tags are meant to be created with croaks. however, i can imagine some use cases for other apps where tags should be able to created alone. 
+- GET files : returns a JSON list of files
+    - parameters
+        - tags : list of tags separated by commas
+            - return only files associated with croaks that are associated with those tags
+        - mode : (0 or 1), 0 = associated with any given tag; 1 = associated with all given tags
+- POST files : upload one or more files
+    - parameters
+        - f : file/s
+- POST votes : upvote/downvote a croak
+    - parameters
+        - croak_id
+        - v : (int) 0 = downvote ; 1 = upvote
+    - only one vote allowed per ip address
+- POST report : report a croak for illegal/spam content
+    - parameters
+        - croak_id
+        - reason : (string) optional
+    - only one per ip address
     
+## Examples
