@@ -222,7 +222,6 @@ class CroakController extends Controller
           foreach($files as $f){
             $file = File::where('filename', '=', $f->getClientOriginalName())->firstOrCreate(['filename' => $f->getClientOriginalName(), 'path' => $dst . '/' . $f->getClientOriginalName(), 'filesize' => $f->getSize()]);
             $f->move($dst, $file->filename);
-            return $file->toArray();
             /*
             if ($file == null || sizeof($file)==0){
               $file = File::create(['filename' => $f->getClientOriginalName(), 'path' => $dst . '/' . $f->getClientOriginalName(), 'filesize' => $f->getSize()]);
@@ -230,7 +229,7 @@ class CroakController extends Controller
             } else {
               $file = $file->first();
             } */                                                               
-            $c->files()->attach($file['id']);
+            $c->files()->attach($file->id);
           }
         }
 
