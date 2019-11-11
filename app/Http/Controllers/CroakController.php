@@ -220,7 +220,7 @@ class CroakController extends Controller
         if (!is_null($files)){
 
           foreach($files as $f){
-            $file = File::where('filename', '=', $f->getClientOriginalName())->firstOrCreate(['filename' => $f->getClientOriginalName(), 'path' => $dst . '/' . $f->getClientOriginalName(), 'filesize' => $f->getSize()]);
+            $file = File::firstOrCreate(['filename' => $f->getClientOriginalName(), 'path' => $dst . '/' . $f->getClientOriginalName(), 'filesize' => $f->getSize()]);
             $f->move($dst, $file->filename);
             /*
             if ($file == null || sizeof($file)==0){
