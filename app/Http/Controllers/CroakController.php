@@ -229,7 +229,7 @@ class CroakController extends Controller
             } else {
               $file = $file->first();
             } */                                                               
-            $c->files()->attach($file->id);
+            $c->files()->attach($file['id']);
           }
         }
 
