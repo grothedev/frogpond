@@ -226,8 +226,8 @@ class CroakController extends Controller
               $f->move($dst,$file->filename);
             } else {
               $file = $file->first();
-            }
-            $c->files()->attach($file->first()['id']);
+            }                                                                
+            $c->files()->attach($file['id']);
           }
         }
 
