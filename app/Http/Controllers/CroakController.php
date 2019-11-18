@@ -68,7 +68,10 @@ class CroakController extends Controller
           $result = $croaks->toArray();
         }
 
-        if (isset($req->radius) && isset($req->x) && isset($req->y)){
+        if (isset($req->x) && isset($req->y)){
+          $rad = 0;
+          if (isset($req->radius)) $rad = $req->radius;
+
           $s = sizeof($result);
           $newresult = array();
           for ($i = 0; $i < $s; $i++){
@@ -82,7 +85,7 @@ class CroakController extends Controller
             //echo 'Crk ' . $c['id'] . ': ' . $dist . ' ';
 
             //echo $dist . '<br>';
-            if ($dist < (int) $req->radius + 20){
+            if ($rad == 0 || $dist < (int) $rad + 20){
               $result[$i]['distance'] = $dist;
               array_push($newresult, $result[$i]);
             }
