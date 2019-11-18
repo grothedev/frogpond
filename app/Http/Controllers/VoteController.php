@@ -34,7 +34,7 @@ class VoteController extends Controller
         $votes = Vote::where('croak_id', '=', $req->croak_id)->get()->toArray();
         
         foreach ($votes as $v){
-            if ( decrypt($v['ip']) == \Request::getClientIp(true) ) return -1;
+            if ( decrypt($v['ip']) == \Request::getClientIp(true) ) return null;
         }
         
         $v = new Vote();
