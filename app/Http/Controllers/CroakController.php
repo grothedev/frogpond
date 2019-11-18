@@ -236,7 +236,10 @@ class CroakController extends Controller
           }
         }
 
-        return $c;
+        $result = $c->toArray();
+        $result['tags'] = $c->tags()->get();
+        if ($c->files()) $result['files'] = $c->files()->get();
+        return $result;
       } else {
         return -1;
       }
