@@ -29,7 +29,7 @@ class VoteController extends Controller
         $ip = encrypt( \Request::getClientIp(true) );
         
         $croak = Croak::findOrFail($req->croak_id);
-        if (is_null($croak)) return -1;
+        if (is_null($croak)) return null;
 
         $votes = Vote::where('croak_id', '=', $req->croak_id)->get()->toArray();
         
