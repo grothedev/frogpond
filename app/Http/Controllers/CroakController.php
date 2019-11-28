@@ -131,7 +131,11 @@ class CroakController extends Controller
               //$result = array_splice($result, $j, 1);
             }
           }
-          return $res2;
+          $result = $res2;
+        }
+
+        if (isset($req->n) && is_numeric($req->n)){
+          $result = array_slice($result, 0, $req->n);
         }
 
         //return $croaks;
