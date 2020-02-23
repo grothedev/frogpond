@@ -39,6 +39,8 @@ Route::get('about', function(){
   return view('about');
 });
 
+Route::get('map', 'CroakController@map');
+
 //Route::get('/', 'HomeController@index');
 
 Auth::routes();

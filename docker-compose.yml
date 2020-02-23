@@ -1,0 +1,8 @@
+version: "3.7"
+services:
+  fp:
+    build: .
+    container_name: fp
+    entrypoint: tail -f /dev/null
+    ports:
+      - "8080:8080"

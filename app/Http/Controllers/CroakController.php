@@ -279,7 +279,7 @@ class CroakController extends Controller
       }
 
       $c = Croak::findOrFail($req->croak_id);
-      if (is_null($c)) retun -1;
+      if (is_null($c)) return -1;
       
       $r = new Report();
       $r->ip = $ip;
@@ -290,6 +290,16 @@ class CroakController extends Controller
       $c->save();
   
       return $c['reports'];
+    }
+
+    public function map(){
+      //todo get croaks from query
+      $cs = Croak::all()->take(5);
+      foreach ($cs as $c){
+        $c->x = decrypt($c->x);
+        $c->y = decrypt($c->y);//NOTE: i shouldn't leave this in production 
+      }
+      return view('map', compact('cs'));
     }
 
     /**
