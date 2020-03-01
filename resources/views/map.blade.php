@@ -4,7 +4,10 @@
     <link rel="stylesheet" href="https://js.arcgis.com/3.31/esri/css/esri.css">
     <script src="https://js.arcgis.com/3.31/"></script>
     <script type = "text/javascript">
-        require(["esri/map", "esri/SpatialReference", "esri/geometry/Point", "esri/graphic", "esri/symbols/SimpleMarkerSymbol", "esri/layers/GraphicsLayers"], function(Map) {
+        require(["esri/map", "esri/SpatialReference", 
+                "esri/geometry/Point", "esri/graphic", 
+                "esri/symbols/SimpleMarkerSymbol", "esri/layers/GraphicsLayer"], 
+        function(Map) {
             var map = new Map("map", {
                 center: [-118, 34.5],
                 //zoom: 8,
@@ -17,10 +20,10 @@
             var csStr = "{{ $cs }}";
             csStr = csStr.replace(/&quot;/g, '"');
             var cs = JSON.parse(csStr);
-
-            cs.forEach(function(c){
+            return;
+            cs.forEach((c) => {
                 var g = new Graphic(
-                    new Point(c['x'], c['y'], new SpatialReference(4326)),
+                    new Point(c.x, c.y, new SpatialReference(4326)),
                     new SimpleMarkerSymbol()
                 );
                 croakPoints.push(g);

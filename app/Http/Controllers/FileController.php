@@ -37,7 +37,7 @@ class FileController extends Controller
      */
     public function store(Request $request)
     {
-        $MAX_FILESIZE = 512000000; //512 MB
+        $MAX_FILESIZE = 536870912; //512 MB
         $files = $request->file('f');
         $res = array(); //[success, filename, msg] response for each file
 
