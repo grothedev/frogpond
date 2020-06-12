@@ -25,7 +25,7 @@ class CreateFilesTable extends Migration
             $table->integer('croak_id')->unsigned()->index();
             $table->foreign('croak_id')->references('id')->on('croaks')->onDelete('cascade');
             $table->integer('file_id')->unsigned()->index()->nullable();
-            $table->foreign('file_id')->references('id')->on('tags')->onDelete('cascade');
+            $table->foreign('file_id')->references('id')->on('files')->onDelete('cascade');
         });
     }
 
