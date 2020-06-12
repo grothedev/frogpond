@@ -210,8 +210,7 @@ class CroakController extends Controller
       }
       */
 
-      $saved = null;
-      if ($saved = $c->save()){
+      if ($c->save()){
         
         foreach( $tags as $tag){
           $tid = Tag::firstOrCreate(['label' => $tag])['id'];
@@ -225,7 +224,6 @@ class CroakController extends Controller
         $files = $request->file('f');
         $dst = 'f';
         if (!is_null($files)){
-
           foreach($files as $f){
             $file = File::firstOrCreate(['filename' => $f->getClientOriginalName(), 'path' => $dst . '/' . $f->getClientOriginalName(), 'filesize' => $f->getSize()]);
             $f->move($dst, $file->filename);
