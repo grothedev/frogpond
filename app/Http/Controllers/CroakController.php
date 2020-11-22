@@ -179,24 +179,34 @@ class CroakController extends Controller
       $tags = explode(',', $request->tags);
       if (sizeof($tags) > 14) return -1; //too many tags
 
+      //lat and lon
       if (!isset($request->x) || !isset($request->y)){
         $c->x = $c->y = 0;
       } else {
         $c->x = encrypt( $request->x );
         $c->y = encrypt( $request->y );
       }
+
+      //croak type, currently unused
       if (!isset($request->type)){
         $c->type = 0;
       } else {
         $c->type = $request->type;
       }
+
+      //setting parent id, if this is a comment, otherwise parent id = 0
       if (isset($request->p_id)){
         $c->p_id = $request->p_id;
-        $p = Croak::find($c->p_id);
-        if (is_null($p)) return -1;
-        $p->replies += 1;
-        $p->save();
+        if ($c->p_id != 0){
+          $p = Croak::find($c->p_id);
+          if (is_null($p)) return -1;
+          $p->replies += 1;
+          $p->save();
+        }
+      } else {
+        $c->p_id = 0;
       }
+
       $c->ip = encrypt( \Request::getClientIp(true) );
       $c->content = $request->content;
       $c->fade_rate = .6;
