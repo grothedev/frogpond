@@ -1,32 +1,34 @@
-<html>
-	<head>
-		<script src = "{{ URL::asset('/js/main.js') }}" type = "text/javascript"></script>
-		<script src = "{{ URL::asset('/js/processing.js') }}" type = "text/javascript"></script>
-		<script src = "https://unpkg.com/axios/dist/axios.min.js"></script>
-		<link href = "{{ URL::asset('/css/style.css') }}" rel = "stylesheet" />
-	</head>
+@extends('layouts.app')
 
-	<body onload = "init()" onresize = "resize()"></body>
+<?php include('functions.php') ?>
 
-	<div id = "input-zone">
-		<h4>Add something to the wall</h4>
-		<div id = "input-select">
-			<a href = "#" onclick = "updateViewInput(0)">Text</a>
-			<a href = "#" onclick = "updateViewInput(1)">Audio</a>
-			<a href = "#" onclick = "updateViewInput(2)">Image</a>
-			<a href = "#" onclick = "updateViewInput(3)">Video</a>
-		</div>
-		<div id = "input-edit">
-			<label>Write some text</label>
-			<!--<button id = "buttonSubmit" onclick = "croak()">Publish</button> -->
-			<br>
-			<textarea rows = "4" cols = "60" id = "textIn" ></textarea>
-		</div>
-	</div>
-	<div id = "display-zone">
-		<canvas id = "canv" width="100%" height = "80%" style = "border:1px solid #030303;">
+@section('content')
+<br>
+<div class = "container">
+        <!-- TODO: jquery pull out for query settings -->
 
+            <div class = "row">
+                <h5>Welcome to the Pond</h5>
+            </div>
 
-		</canvas>
-	</div>
-</html>
+            @foreach ($croaks as $c)
+                <?php $tagsStr = getTagsAsStr($c); ?>
+
+                <a href = "c/{!! $c->id !!}">
+                <div class = "box croak-listitem">
+                    <h6>{!! $c->created_at !!}</h6>
+                   <p>{!! $c->content !!}</p>
+                    
+                    <small><b>Tags</b>: {!! $tagsStr !!}</small><br>
+                    <small>{!! $c->replies !!} Replies</small><br>
+                    @if (!is_null($file = getFile($c)))
+                        <small>File: <a href = {!! $file->path !!}>{!! $file->filename !!}</a></small>
+                    @endif
+                </div>
+                </a>
+            @endforeach
+            <center> - -- --- ----- -------- ----- --- -- -</center>
+            <br>
+    
+</div>
+@endsection

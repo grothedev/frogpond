@@ -1,13 +1,15 @@
 <!-- copied this template over from ESW site -->
 <!DOCTYPE html>
-<html lang="en">
 
+
+<html lang="en">
+	
 	<title>The Pond</title>
 
 	<head>
 		<link href = "{{{ asset('css/skeleton.css') }}}" rel = "stylesheet" />
-    <link href = "{{{ asset('css/style.css') }}}" rel = "stylesheet" />
-    <meta name = "keywords" content = "todo"/>
+    	<link href = "{{{ asset('css/style.css') }}}" rel = "stylesheet" />
+    	<meta name = "keywords" content = "todo"/>
 	</head>
 
 	<div class = "banner">
@@ -15,19 +17,6 @@
 			<h1>Frog Pond</h1>
 		</div>
 	</div>
-
-  <!-- sidebar obsolete
-	<div class = "sidebar">
-		<div class = "nav-link">
-			<ul>
-				<li><a href = "/">About</a></li>
-				<li><a href = "/projects">Projects</a></li>
-			</ul>
-			<br>
-
-		</div>
-	</div>
-  -->
 
   @yield('content')
 

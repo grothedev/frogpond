@@ -11,6 +11,20 @@
   margin-left: 3%;
 }
 
+.box {
+	border: solid black 1px;
+	padding: 4rem;
+	margin: 1rem;
+}
+
+.croak-listitem {
+	margin-left: .5rem;
+}
+
+.croak-content {
+
+}
+
 p{
   font-size: larger;
 }
@@ -18,7 +32,8 @@ p{
 .banner{
 	width: 100%;
 	border-bottom: 1px black solid;
-	margin-bottom: 3rem;
+	top: 0px;
+	position: static;
 }
 
 .banner-title{
@@ -27,7 +42,7 @@ p{
 
 .footer{
 	position: relative;
-  bottom: 0;
+  	bottom: 0;
   
 	margin: auto;
 	width: 96%;

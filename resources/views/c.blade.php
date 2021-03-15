@@ -2,17 +2,13 @@
 
 <?php
   //setup nice looking date string
+  include('functions.php');
 
-  $tags = [];
-  $tagStr = '';
-  foreach ($c->tags as $t){
-    array_push($tags, $t->label);
-    $tagStr .= $t->label . ', ';
-  }
-
-  $file = $c->files->first();
+  $tagStr = getTagsAsStr($c);
+  $file = getFile($c);
   $fileHTML = 'No file attachments';
-  if (!is_null($file)){
+  
+  if (!is_null($file)){ 
     
     if ( fileIsType($file['filename'], '.jpg') || fileIsType($file['filename'], '.jpeg') || fileIsType($file['filename'], '.gif') || fileIsType($file['filename'], '.png') ){
       $fileHTML = '<img src = "../f/' . $file['filename'] . '"><a href = "../f/' . $file['filename'] . '"><br>' . $file['filename'] . '</a></img>';  
@@ -21,11 +17,6 @@
     } else if (fileIsType($file['filename'], '.mp3') || fileIsType($file['filename'], '.flac') || fileIsType($file['filename'], '.ogg') || fileIsType($file['filename'], '.wav')){
       $fileHTML = '<audio controls> <source src = "../f/' . $file['filename'] . '">Your browser does not support audio player</audio><a href = "../f/' . $file['filename'] . '"><br>' . $file['filename'] . '</a>';  
     } else $fileHTML = '<a href = "../f/' . $file['filename'] . '">' . $file['filename'] . '</a>';
-  }
-
-  function fileIsType($fn, $ext){
-    $e = strlen($fn) - strlen($ext);
-    return ( stripos($fn, $ext) == $e);
   }
 ?>
 
@@ -40,5 +31,12 @@
       {!! $fileHTML !!} 
     </div>
     <br>
+    {!! Form::open(['url' => 'api/croaks', 'files' => true]) !!}
+      Croak back: {!! Form::text('content') !!}
+      <br>
+      Attach file: {!! Form::file('f[]', ['multiple' => 'multiple']) !!}
+      <input type = "hidden" value = "{{ $c->id }}" name = "p_id" />
+      <button type = "submit">Submit</button>
+    {!! Form::close() !!}
 </div>
 @endsection

@@ -13,8 +13,8 @@
 
 
 Route::get('/', function () {
-    //return view('index');
-    return view('layouts.app');
+    $croaks = App\Croak::all();
+    return view('index', compact('croaks'));
 });
 
 Route::get('apitest', function(){

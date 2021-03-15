@@ -25,7 +25,7 @@ class CreateCroaksTable extends Migration
             $table->integer('score');
             $table->integer('reports')->default(0); //should this actually be stored in the database? or should it be calculated on retrieval?
             
-            $table->integer('p_id')->unsigned()->nullable(); //parent id
+            $table->integer('p_id')->unsigned()->default(0); //parent id
             $table->foreign('p_id')->references('id')->on('croaks')->onDelete('cascade');
 
             $table->integer('user_id')->unsigned()->nullable();
