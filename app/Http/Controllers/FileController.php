@@ -2,12 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\File;
+use App\Models\File;
 use Illuminate\Http\Request;
 
 class FileController extends Controller
 {
-
     /**
      * Display a listing of the resource.
      *

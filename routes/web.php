@@ -11,9 +11,10 @@
 |
 */
 
+use App\Models\Croak;
 
 Route::get('/', function () {
-    $croaks = App\Croak::all();
+    $croaks = Croak::all()->where('p_id', '==', '0');
     return view('index', compact('croaks'));
 });
 
@@ -27,7 +28,7 @@ Route::get('populatefdb', function(){
 });
 
 Route::get('c/{id}', function($id){
-  $c = App\Croak::find($id);
+  $c = Croak::find($id);
   return view('c', compact('c'));
 });
 
@@ -43,6 +44,5 @@ Route::get('map', 'CroakController@map');
 
 //Route::get('/', 'HomeController@index');
 
-Auth::routes();
 
 //Route::Resource('croaks', 'CroakController');

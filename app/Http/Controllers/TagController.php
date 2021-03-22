@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Tag;
-use App\Croak;
+use App\Models\Tag;
+use App\Models\Croak;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -21,7 +21,7 @@ class TagController extends Controller
       $tags = Tag::all();
 
       if (isset($request->radius) && isset($request->x) && isset($request->y) ){
-        $lonA = $request->x * pi()/180.0; 
+        $lonA = $request->x * pi()/180.0;
         $latA = $request->y * pi()/180.0;
 
         for ($i = 0; $i < sizeof($tags); $i++){
@@ -35,13 +35,13 @@ class TagController extends Controller
             }
             if ($i = sizeof($tags) - 1) unset($tags[$i]);
           }
-          
+
         }
       }
 
       if (isset($request->n)){
         //$tags = DB::table('tags')->orderBy('refs', 'desc')->take((int)$request->n)->get();
-        $tags = array_values($tags->sortByDesc('refs')->take((int)$request->n)->all()); 
+        $tags = array_values($tags->sortByDesc('refs')->take((int)$request->n)->all());
      } else {
         $tags = $tags->toArray();
       }

@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Report;
+use App\Models\Croak;
 use Illuminate\Http\Request;
-use App\Report;
-use App\Croak;
 
 class ReportController extends Controller
 {
@@ -30,7 +30,7 @@ class ReportController extends Controller
         $c = Croak::findOrFail($req->croak_id);
         $dupe = Report::where('ip', '=', $ip)->where('croak_id', '=', $c->id)->first();
 
-        if (is_null($c)) retun -1;
+        if (is_null($c)) return -1;
         if (is_null($dupe)){
             $r = new Report();
             $r->ip = $ip;

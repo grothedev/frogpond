@@ -14,7 +14,7 @@
 
 	<div class = "banner">
 		<div class = "banner-title">
-			<h1>Frog Pond</h1>
+			<a href = "/"><h1>Frog Pond</h1></a>
 		</div>
 	</div>
 

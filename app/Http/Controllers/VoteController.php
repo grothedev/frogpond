@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Vote;
 use Illuminate\Http\Request;
-use App\Vote;
-use App\Croak;
+use App\Models\Croak;
 
 class VoteController extends Controller
 {
@@ -27,16 +27,16 @@ class VoteController extends Controller
     public function store(Request $req)
     {
         $ip = encrypt( \Request::getClientIp(true) );
-        
+
         $croak = Croak::findOrFail($req->croak_id);
         if (is_null($croak)) return null;
 
         $votes = Vote::where('croak_id', '=', $req->croak_id)->get()->toArray();
-        
+
         foreach ($votes as $v){
             if ( decrypt($v['ip']) == \Request::getClientIp(true) ) return null;
         }
-        
+
         $v = new Vote();
         $v->ip = $ip;
         $v->croak_id = $req->croak_id;
