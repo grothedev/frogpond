@@ -102,5 +102,5 @@ This API provides a way for developers to access and create croaks, files, and t
         - reason : (string) optional
     - only one per ip address
 
-# This application also provides a minimal web interface for browsing, viewing, and adding content.
+## This application also provides a minimal web interface for browsing, viewing, and adding content.
     

@@ -12,10 +12,6 @@ use GuzzleHttp\Client;
 
 class CroakController extends Controller
 {
-    function checkpid($e){
-        return isset($e['p_id']);
-      }
-
       /**
        * Display a listing of the resource.
        *
