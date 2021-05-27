@@ -204,7 +204,7 @@ class CroakController extends Controller
             $p->save();
           }
         } else {
-          $c->p_id = 0;
+          $c->p_id = NULL;
         }
 
         $c->ip = encrypt( \Request::getClientIp(true) );
