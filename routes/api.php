@@ -17,6 +17,10 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::get('/', function(){
+    return view('api_info');
+});
+
 Route::Resource('croaks', 'CroakController');
 Route::Resource('files', 'FileController');
 Route::Resource('tags', 'TagController');

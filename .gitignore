@@ -4,6 +4,7 @@
 /public/f/*
 /public/uploaded_files/*
 /storage/*.key
+/storage/framework
 /vendor
 /.idea
 /.vscode

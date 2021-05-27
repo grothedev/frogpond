@@ -1,6 +1,6 @@
 # Frog Pond API:
 
-This API provides a way for developers to access and create croaks, files, and tags. It is a laravel application with a PostgreSQL database.  
+This Laravel application provides an API for frogpond, to enable developers to access and create croaks, files, and tags. It can be used with any database server, but I use PostgresQL. 
 
 ## How to use the API:
 
@@ -102,5 +102,5 @@ This API provides a way for developers to access and create croaks, files, and t
         - reason : (string) optional
     - only one per ip address
 
-## This application also provides a minimal web interface for browsing, viewing, and adding content.
+# This application also provides a minimal web interface for browsing, viewing, and adding content.
     
