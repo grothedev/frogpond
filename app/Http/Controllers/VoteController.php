@@ -29,12 +29,20 @@ class VoteController extends Controller
         $ip = encrypt( \Request::getClientIp(true) );
 
         $croak = Croak::findOrFail($req->croak_id);
-        if (is_null($croak)) return null;
+        if (is_null($croak)) {
+            return [
+                'error' => 'croak not found: ' . $req->croak_id
+            ];
+        }
 
         $votes = Vote::where('croak_id', '=', $req->croak_id)->get()->toArray();
 
         foreach ($votes as $v){
-            if ( decrypt($v['ip']) == \Request::getClientIp(true) ) return null;
+            if ( decrypt($v['ip']) == \Request::getClientIp(true) ) {
+                return [
+                    'error' => 'this ip address has already voted on this croak'
+                ];
+            }
         }
 
         $v = new Vote();

@@ -28,9 +28,14 @@ class ReportController extends Controller
     {
         $ip = encrypt( \Request::getClientIp(true) );
         $c = Croak::findOrFail($req->croak_id);
+        if (is_null($c)) {
+            return [
+                'error' => 'croak not found: ' . $req->croak_id
+            ];
+        }
+        
         $dupe = Report::where('ip', '=', $ip)->where('croak_id', '=', $c->id)->first();
 
-        if (is_null($c)) return -1;
         if (is_null($dupe)){
             $r = new Report();
             $r->ip = $ip;

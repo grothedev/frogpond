@@ -29,7 +29,9 @@ class FileController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * upload some files
+     * required params:
+     *  f: POST files (multipart). file/s to upload
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response

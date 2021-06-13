@@ -11,8 +11,12 @@ use Illuminate\Support\Facades\DB;
 class TagController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     *
+     * Display a list of tags.
+     * optional params:
+     *  x, y: float. logitude, latitude. 
+     *  radius: int. search radius in km. requires x & y.
+     *  n: int. maximum number of tags to return.
+     * 
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request)
@@ -20,7 +24,12 @@ class TagController extends Controller
 
       $tags = Tag::all();
 
-      if (isset($request->radius) && isset($request->x) && isset($request->y) ){
+      if (isset($request->x) && isset($request->y) ){
+        $radius = 20; //default radius if not set
+        if (isset($request->radius)){
+          $radius = $request->radius;
+        }
+
         $lonA = $request->x * pi()/180.0;
         $latA = $request->y * pi()/180.0;
 

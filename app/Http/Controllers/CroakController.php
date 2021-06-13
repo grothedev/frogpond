@@ -13,8 +13,16 @@ use GuzzleHttp\Client;
 class CroakController extends Controller
 {
       /**
-       * Display a listing of the resource.
-       *
+       * Display a list of croaks
+       * api params (optional):
+       *  tags: string. concepts-of-interest separated by commas
+       *  x, y: float. longitude and latitude. usually location of user
+       *  radius: int. how many km away do you want data from
+       *  mode: 0 or 1. 0 = want croaks containing any given tags; 1 = want croaks containing all of give tags
+       *  exclude: string. exclude croaks containing any of these tags, separated by commas
+       *  p_id: int. parent id. only retrieve children of this parent croak. 
+       *  n: int. limit result to this many croaks maximum
+       * 
        * @return \Illuminate\Http\Response
        */
       public function index(Request $req)
@@ -101,14 +109,13 @@ class CroakController extends Controller
                 }
                 if ($j == sizeof($result[$i]['tags'])-1) array_push($res1, $result[$i]);
               }
-
             }
             $result = $res1;
           }
 
 
           //TODO later: comment croaks by radius
-              $res2 = Array(); //i'm starting to see why people hate php now
+          $res2 = Array();
           if (isset($req->p_id)){
 
             //put all p_id ints into an array whether there is one given or multiple as string separated by commas
@@ -164,7 +171,14 @@ class CroakController extends Controller
       }
 
       /**
-       * Store a newly created resource in storage.
+       * Store a new croak
+       * required params:
+       *  x, y: float. logitude, latitude
+       *  content: string. the croak itself
+       *  tags: string. comma-separated list of tags
+       * optional params:
+       *  p_id: int. parent id. used if this is a reply to another croak
+       *  f: POST file (multipart). file/s associated with the croak
        *
        * @param  \Illuminate\Http\Request  $request
        * @return \Illuminate\Http\Response
@@ -173,7 +187,11 @@ class CroakController extends Controller
       {
         $c = new Croak();
         $tags = explode(',', $request->tags);
-        if (sizeof($tags) > 14) return -1; //too many tags
+        if (sizeof($tags) > 14) {
+          return [
+            'error' => 'too many tags (>14)'
+          ];
+        }
 
         //lat and lon
         if (!isset($request->x) || !isset($request->y)){
@@ -190,12 +208,16 @@ class CroakController extends Controller
           $c->type = $request->type;
         }
 
-        //setting parent id, if this is a comment, otherwise parent id = 0
+        //setting parent id, if this is a comment, otherwise parent id = null
         if (isset($request->p_id)){
           $c->p_id = $request->p_id;
           if ($c->p_id != 0){
             $p = Croak::find($c->p_id);
-            if (is_null($p)) return -1;
+            if (is_null($p)) {
+              return [
+                'error' => 'parent croak not found: ' . $request->p_id
+              ];
+            }
             $p->replies += 1;
             $p->save();
           }
@@ -253,11 +275,10 @@ class CroakController extends Controller
             return $result;
           }
         } else {
-            if (isset($request->redirect)){
-                return redirect()->back();
-            } else {
-                return -1;
-            }
+            $error = [
+              'error' => 'failed to save croak. probably a server error.'
+            ];
+            return $error;
         }
       }
 
@@ -268,7 +289,7 @@ class CroakController extends Controller
       }
 
       /**
-       * Display the specified resource.
+       * Display the croak that has the given id.
        *
        * @param  \App\Post  $post
        * @return \Illuminate\Http\Response
@@ -281,27 +302,6 @@ class CroakController extends Controller
           if ($croak->files()) $result['files'] = $croak->files()->get();
           return $result;
           //return CroakController::attachFilesTags($croak);
-      }
-
-      public function report(Request $req){
-        $ip = encrypt( \Request::getClientIp(true) );
-        $croaks = Report::where('croak_id', '=', $req->croak_id)->get();
-        foreach ($croaks as $c){
-          if ( decrypt( $c->ip ) == \Request::getClientIp(true) ) return -1;
-        }
-
-        $c = Croak::findOrFail($req->croak_id);
-        if (is_null($c)) return -1;
-
-        $r = new Report();
-        $r->ip = $ip;
-        $r->croak_id = $req->croak_id;
-        $r->reason = $req->reason;
-        $c['reports'] += 1;
-        $r->save();
-        $c->save();
-
-        return $c['reports'];
       }
 
       public function map(){
