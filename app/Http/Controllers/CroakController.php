@@ -314,6 +314,27 @@ class CroakController extends Controller
         return view('map', compact('cs'));
       }
 
+      public function report(Request $req){
+        $ip = encrypt( \Request::getClientIp(true) );
+        $croaks = Report::where('croak_id', '=', $req->croak_id)->get();
+        foreach ($croaks as $c){
+          if ( decrypt( $c->ip ) == \Request::getClientIp(true) ) return -1;
+        }
+
+        $c = Croak::findOrFail($req->croak_id);
+        if (is_null($c)) return -1;
+
+        $r = new Report();
+        $r->ip = $ip;
+        $r->croak_id = $req->croak_id;
+        $r->reason = $req->reason;
+        $c['reports'] += 1;
+        $r->save();
+        $c->save();
+
+        return $c['reports'];
+      }
+
       /**
        * Show the form for editing the specified resource.
        *
