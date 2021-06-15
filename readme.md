@@ -1,3 +1,7 @@
+TODO:
+    - update README
+    - use loc service for lat lon
+
 # Frog Pond API:
 
 This Laravel application provides an API for frogpond, to enable developers to access and create croaks, files, and tags. It can be used with any database server, but I use PostgresQL. 
