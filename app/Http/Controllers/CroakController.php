@@ -193,12 +193,17 @@ class CroakController extends Controller
           ];
         }
 
+        $c->ip = encrypt( \Request::getClientIp(true) );
+            
         //lat and lon
         if (!isset($request->x) || !isset($request->y)){
           $c->x = $c->y = 0;
         } else {
-          $c->x = encrypt( $request->x );
-          $c->y = encrypt( $request->y );
+          $guzClient = new Client();
+          $resp = $guzClient->get('http://ipinfo.io/' . $c->ip . '/loc');
+          $loc = $resp->getBody().explode(',');
+          $c->x = encrypt( $loc[1] ); //$request->x );
+          $c->y = encrypt( $loc[0] ); //$request->y );
         }
 
         //croak type, currently unused
@@ -225,7 +230,6 @@ class CroakController extends Controller
           $c->p_id = NULL;
         }
 
-        $c->ip = encrypt( \Request::getClientIp(true) );
         $c->content = $request->content;
         $c->fade_rate = .6;
         $c->score = 0;
