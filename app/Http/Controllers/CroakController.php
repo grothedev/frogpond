@@ -200,10 +200,11 @@ class CroakController extends Controller
           $c->x = $c->y = 0;
         } else {
           $guzClient = new Client();
-          $resp = $guzClient->get('http://ipinfo.io/' . $c->ip . '/loc');
-          $loc = $resp->getBody().explode(',');
-          $c->x = encrypt( $loc[1] ); //$request->x );
-          $c->y = encrypt( $loc[0] ); //$request->y );
+          $resp = $guzClient->get('http://ipinfo.io/' . \Request::getClientIp(true) . '/loc');
+          $loc = explode(',', $resp->getBody());
+
+          $c->x = encrypt( trim($loc[1]) ); //$request->x );
+          $c->y = encrypt( trim($loc[0]) ); //$request->y );
         }
 
         //croak type, currently unused
