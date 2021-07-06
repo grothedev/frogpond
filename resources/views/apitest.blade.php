@@ -6,6 +6,7 @@
   <h3>File upload</h3>
   {!! Form::open(['url' => 'api/files', 'files' => true]) !!}
     {!! Form::file('f[]', ['multiple' => 'multiple']) !!}
+    Tag (optional): <input type = "text" name = "tag" />
     <button type = "submit">Submit</button>
   {!! Form::close() !!}
 

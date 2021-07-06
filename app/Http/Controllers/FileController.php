@@ -12,10 +12,13 @@ class FileController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $req)
     {
-        $files = File::all();
-        return $files;
+        if (isset($req->tag)){
+          return File::where('tag', '=', $req->tag)->get();
+        } else {
+          return File::all();
+        }
     }
 
     /**
@@ -23,7 +26,7 @@ class FileController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create()  
     {
         //
     }
@@ -68,6 +71,11 @@ class FileController extends Controller
             $fObj->filename = rand() . '_' . $f->getClientOriginalName();
           }
           $fObj->path = $dst . '/' . $fObj->filename;
+          
+          //all files uploaded in this request will have the same tag that is only of concern to the uploader. this is not the same thing as a croak tag
+          if (isset($request->tag)){
+            $fObj->tag = $request->tag;
+          }
 
           try {
             $s = $fObj->save();
