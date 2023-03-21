@@ -41,57 +41,92 @@ class FileController extends Controller
      */
     public function store(Request $request)
     {
-        $MAX_FILESIZE = 536870912; //512 MB
-        $files = $request->file('f');
-        $res = array(); //[success, filename, msg] response for each file
+        //is this a chunked upload or not?
+        if ($request->chunked && $request->chunked = true){
+          //store this chunk in tmp storage. if tmp storage contains # of chunks as total of this session id, merge them and move to destination
+          $data = $request->file('file_chunk');
+          $id = $request->session_id;
+          $m = $data->move('filechunks/'.$id.'/', $request->filename.'-'.$request->chunk_id);
+          $percent_complete = (sizeof(scandir('filechunks/'.$id.'/')) / $request->total_chunks)*100;
+          if ($m && $percent_complete == 100){
+            $dstFile = fopen('f/'.$request->filename, 'wb');
+            for ($i = 0; $i < $request->total_chunks; $i++){
+              $chunkFilename = 'filechunks/'.$id.'/'.$request->filename.'-'.$i;
+              $chunkFile = fopen($chunkFilename, 'rb');
+              fwrite($dstFile, fread($chunkFile, filesize($chunkFilename)));
+              unlink($chunkFilename);
+            }
+            fclose($dstFile);
+            return [
+              'session_id' => $id,
+              'chunk_id' => $request->chunk_id,
+              'success' => true,
+              'percent' => 100,
+              'filepath' => 'f/'.$request->filename
+            ];  
+          }
+          return [
+            'session_id' => $id,
+            'chunk_id' => $request->chunk_id,
+            'success' => $m,
+            'percent' => $percent_complete
+          ];
+        } else {        
+          $MAX_FILESIZE = 536870912; //512 MB
+          $files = $request->file('f');
+          $res = array(); //[success, filename, msg] response for each file
 
+          //return var_dump($request->toArray());
+          $dst = 'f'; //keepin it simple
 
-        $dst = 'f'; //keepin it simple
-
-
-        if (!is_array($files)) { //make it into a 1 elem array
-          $tmp = array();
-          array_push($tmp, $files);
-          $files = $tmp;
-        }
-
-        foreach ($files as $f){
-          $fObj = new File();
-          $fObj->filename = $f->getClientOriginalName();
-
-          //checking filesize
-          $fObj->filesize = $f->getSize();
-          if ($fObj->filesize > $MAX_FILESIZE){
-            array_push($res, ['filename' => $fObj->filename, 'success' => false, 'msg' => 'file too big (>512MB). contact me for special cases']);
-            continue;
+          if (!is_array($files)) { //make it into a 1 elem array
+            $tmp = array();
+            array_push($tmp, $files);
+            $files = $tmp;
           }
 
-          //checking duplicate filename
-          while (File::where('filename', $fObj->filename)->first() != null){
-            $fObj->filename = rand() . '_' . $f->getClientOriginalName();
-          }
-          $fObj->path = $dst . '/' . $fObj->filename;
           
-          //all files uploaded in this request will have the same tag that is only of concern to the uploader. this is not the same thing as a croak tag
-          if (isset($request->tag)){
-            $fObj->tag = $request->tag;
+          foreach ($files as $i => $f){
+            $res[$i] = var_dump($f);
+            
+            $fObj = new File();
+            continue;
+            $fObj->filename = $f->getClientOriginalName();
+
+            //checking filesize
+            $fObj->filesize = $f->getSize();
+            if ($fObj->filesize > $MAX_FILESIZE){
+              array_push($res, ['filename' => $fObj->filename, 'success' => false, 'msg' => 'file too big (>512MB). contact me for special cases']);
+              continue;
+            }
+
+            //checking duplicate filename
+            while (File::where('filename', $fObj->filename)->first() != null){
+              $fObj->filename = rand() . '_' . $f->getClientOriginalName();
+            }
+            $fObj->path = $dst . '/' . $fObj->filename;
+            
+            //all files uploaded in this request will have the same tag that is only of concern to the uploader. this is not the same thing as a croak tag
+            if (isset($request->tag)){
+              $fObj->tag = $request->tag;
+            }
+
+            try {
+              $s = $fObj->save();
+            } catch (Exception $e){
+              return $e;
+            }
+            $m = $f->move($dst,$fObj->filename);
+
+
+            if ($s && !is_null($m)) array_push($res, ['filename' => $fObj->filename, 'url' => "http://grothe.ddns.net/f/" . $fObj->filename, 'success' => true] );
+            else array_push($res, ['filename' => $fObj->filename, 'success' => false, 'msg' => 'upload failed: php filesystem interaction error'] );
+
           }
 
-          try {
-            $s = $fObj->save();
-          } catch (Exception $e){
-            return $e;
-          }
-          $m = $f->move($dst,$fObj->filename);
 
-
-          if ($s && !is_null($m)) array_push($res, ['filename' => $fObj->filename, 'url' => "http://grothe.ddns.net/f/" . $fObj->filename, 'success' => true] );
-          else array_push($res, ['filename' => $fObj->filename, 'success' => false, 'msg' => 'upload failed: php filesystem interaction error'] );
-
+          return json_encode($res);
         }
-
-
-        return json_encode($res);
     }
 
 	//go through all files in the upload dir ('f') and add them to the database as a file object if they are not already added
