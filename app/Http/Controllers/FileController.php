@@ -46,13 +46,14 @@ class FileController extends Controller
           //store this chunk in tmp storage. if tmp storage contains # of chunks as total of this session id, merge them and move to destination
           $data = $request->file('file_chunk');
           $id = $request->session_id;
-          $m = $data->move('filechunks/'.$id.'/', $request->filename.'-'.$request->chunk_id);
-          $percent_complete = (sizeof(scandir('filechunks/'.$id.'/')) / $request->total_chunks)*100;
+          $folder = 'filechunks/'.$request->filename.'_'.$id.'/'; //where this file will be stored
+          $m = $data->move($folder, $request->filename.'-'.$request->chunk_id);
+          $percent_complete = (sizeof(scandir($folder)) / $request->total_chunks)*100;
           if ($m && $percent_complete == 100){
             $dstFile = fopen('f/'.$request->filename, 'wb');
             for ($i = 0; $i < $request->total_chunks; $i++){
-              $chunkFilename = 'filechunks/'.$id.'/'.$request->filename.'-'.$i;
-              $chunkFile = fopen($chunkFilename, 'rb');
+              $chunkFilename = $folder.$request->filename.'-'.$i;
+              $chunkFile = fopen($chunkFilename, 'a+');
               fwrite($dstFile, fread($chunkFile, filesize($chunkFilename)));
               unlink($chunkFilename);
             }
