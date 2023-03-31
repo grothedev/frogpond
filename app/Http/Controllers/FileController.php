@@ -48,7 +48,7 @@ class FileController extends Controller
           $id = $request->session_id;
           $folder = 'filechunks/'.$request->filename.'_'.$id.'/'; //where this file will be stored
           $m = $data->move($folder, $request->filename.'-'.$request->chunk_id);
-          $percent_complete = (sizeof(scandir($folder)) / $request->total_chunks)*100;
+          $percent_complete = ((sizeof(scandir($folder))-2) / $request->total_chunks)*100; // -2 because '.' & '..'
           if ($m && $percent_complete == 100){
             $dstFile = fopen('f/'.$request->filename, 'wb');
             for ($i = 0; $i < $request->total_chunks; $i++){
