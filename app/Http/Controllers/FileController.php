@@ -42,7 +42,7 @@ class FileController extends Controller
     public function store(Request $request)
     {
         //is this a chunked upload or not?
-        if ($request->chunked && $request->chunked = true){
+        if ($request->chunked && $request->chunked = true){ //TODO add chunked files to the database
           //store this chunk in tmp storage. if tmp storage contains # of chunks as total of this session id, merge them and move to destination
           $data = $request->file('file_chunk');
           $id = $request->session_id;
