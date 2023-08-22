@@ -32,10 +32,11 @@ class FileController extends Controller
     }
 
     /**
-     * upload some files
+     * upload some files. this supports both chunked and normal upload
      * required params:
      *  f: POST files (multipart). file/s to upload
-     *
+     * optional params:
+     *  htmlresponse: set to return an html response for website display, as opposed to json response
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
@@ -88,10 +89,7 @@ class FileController extends Controller
 
           
           foreach ($files as $i => $f){
-            $res[$i] = var_dump($f);
-            
             $fObj = new File();
-            continue;
             $fObj->filename = $f->getClientOriginalName();
 
             //checking filesize
@@ -119,14 +117,22 @@ class FileController extends Controller
             }
             $m = $f->move($dst,$fObj->filename);
 
-
-            if ($s && !is_null($m)) array_push($res, ['filename' => $fObj->filename, 'url' => "http://grothe.ddns.net/f/" . $fObj->filename, 'success' => true] );
+            if ($s && !is_null($m) && $m) array_push($res, ['filename' => $fObj->filename, 'api_url' => "/api/files/" . $fObj->id, 'success' => true] );
             else array_push($res, ['filename' => $fObj->filename, 'success' => false, 'msg' => 'upload failed: php filesystem interaction error'] );
 
           }
 
-
-          return json_encode($res);
+          if ($request->htmlresponse){
+            $htmlStr = '<html>';
+            foreach ($res as $r){
+              $fn = $r['filename'];
+              $htmlStr .= "<h3><a href = \"/f/$fn\"> $fn uploaded</a>.</h3>";
+            }
+            $htmlStr .= '</html>';
+            return $htmlStr;
+          } else {
+            return json_encode($res);
+          }
         }
     }
 
